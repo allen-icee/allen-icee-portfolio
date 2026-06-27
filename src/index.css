@@ -1,0 +1,127 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300..600&family=Playfair+Display:ital,wght@0,400..800;1,400..800&family=Lora:ital,wght@0,400..700;1,400..700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  /* Semantic light-theme tokens */
+  --color-surface: #FAF9F6;
+  --color-on-surface: #2D2D2D;
+  --color-primary: #6B4C9A;
+  --color-primary-light: #E6E6FA;
+
+  /* Backward-compatible aliases */
+  --color-warm-paper: var(--color-surface);
+  --color-charcoal: var(--color-on-surface);
+  --color-purple-brand: var(--color-primary);
+  --color-lavender: var(--color-primary-light);
+
+  /* Font families */
+  --font-sans: 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
+  --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-body: 'Lora', Georgia, 'Times New Roman', serif;
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+.dark {
+  --color-surface: #1A1A1D;
+  --color-on-surface: #EAEAEA;
+  --color-primary: #8B6BC2;
+}
+
+@layer base {
+  html {
+    scroll-behavior: auto;
+  }
+
+  body {
+    font-family: var(--font-body);
+    background-color: var(--color-surface);
+    color: var(--color-on-surface);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-serif);
+  }
+}
+
+/* ---- Paper overlay (dynamic noise texture & vignette) ---- */
+.paper-overlay {
+  position: relative;
+}
+
+.paper-overlay::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.08; /* Increased opacity for visibility */
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px 200px;
+}
+
+/* Subtle desk vignette */
+.paper-overlay::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9998;
+  background: radial-gradient(circle at center, transparent 40%, rgba(45, 45, 45, 0.04) 100%);
+}
+
+.dark .paper-overlay::before {
+  opacity: 0.05;
+  filter: invert(1);
+}
+
+.dark .paper-overlay::after {
+  background: radial-gradient(circle at center, transparent 40%, rgba(0, 0, 0, 0.4) 100%);
+}
+
+/* Alias .paper-texture → .paper-overlay for compatibility */
+.paper-texture {
+  position: relative;
+}
+
+.paper-texture::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.08;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px 200px;
+}
+
+.paper-texture::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9998;
+  background: radial-gradient(circle at center, transparent 40%, rgba(45, 45, 45, 0.04) 100%);
+}
+
+.dark .paper-texture::before {
+  opacity: 0.05;
+  filter: invert(1);
+}
+
+.dark .paper-texture::after {
+  background: radial-gradient(circle at center, transparent 40%, rgba(0, 0, 0, 0.4) 100%);
+}
