@@ -217,7 +217,7 @@ function SingleCat({ config }: { config: CatConfig }) {
   }, [])
 
   // -- The Game Loop --
-  useAnimationFrame((t, delta) => {
+  useAnimationFrame((_, delta) => {
     const safeDelta = Math.min(delta, 100)
     const currentAnim = ANIMATIONS[state.current]
 

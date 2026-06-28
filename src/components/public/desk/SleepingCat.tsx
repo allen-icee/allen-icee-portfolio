@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Icon } from '@iconify/react'
 
 export function SleepingCat() {
-  const [clickCount, setClickCount] = useState(0)
+  const [, setClickCount] = useState(0)
   const [catState, setCatState] = useState<'idle' | 'waking' | 'walking' | 'gone'>('idle')
   const [noteOpen, setNoteOpen] = useState(false)
 
@@ -29,7 +29,7 @@ export function SleepingCat() {
   }
 
   // Define animations based on state
-  const catAnimations = {
+  const catAnimations: Record<string, any> = {
     idle: {
       scaleY: [1, 1.05, 1],
       transition: { duration: 3, repeat: Infinity, ease: 'easeInOut' }
