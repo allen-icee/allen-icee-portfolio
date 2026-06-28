@@ -1,4 +1,4 @@
-import { useCallback, useRef, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { Icon } from '@iconify/react'
 import type Lenis from 'lenis'
@@ -51,6 +51,36 @@ function FloatingPetal({ className, petalIndex = 1, duration = 10, delay = 0 }: 
       animate={{ y: [-30, 30, -30], x: [-15, 15, -15], rotateZ: [0, 180, 360] }}
       transition={{ duration, delay, repeat: Infinity, ease: 'linear' }}
     />
+  )
+}
+
+function Fireflies() {
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none mix-blend-screen opacity-80 z-[1]">
+      {[...Array(30)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute rounded-full bg-[#FFF59D] shadow-[0_0_8px_rgba(255,245,157,0.8)]"
+          style={{
+            width: Math.random() * 4 + 2 + 'px',
+            height: Math.random() * 4 + 2 + 'px',
+            left: Math.random() * 100 + '%',
+            top: Math.random() * 100 + '%',
+          }}
+          animate={{
+            y: [0, -Math.random() * 100 - 50, 0],
+            x: [0, Math.random() * 50 - 25, 0],
+            opacity: [0, Math.random() * 0.8 + 0.2, 0],
+          }}
+          transition={{
+            duration: Math.random() * 10 + 10,
+            repeat: Infinity,
+            ease: 'easeInOut',
+            delay: Math.random() * 10,
+          }}
+        />
+      ))}
+    </div>
   )
 }
 
@@ -179,8 +209,76 @@ function FloatingOrigami({ className }: { className?: string }) {
 }
 
 export default function PublicHero() {
+  const [quote, setQuote] = useState("Sometimes, understanding someone else helps us better understand ourselves. Welcome to mine!")
+  const [displayedQuote, setDisplayedQuote] = useState("")
+  const [isTyping, setIsTyping] = useState(false)
+
+  const fetchQuote = useCallback(async () => {
+    try {
+      let validQuote = false;
+      let newQuote = "";
+      let attempts = 0;
+
+      const BAD_WORDS = ['allah', 'buddha', 'islam', 'quran'];
+
+      while (!validQuote && attempts < 5) {
+        const res = await fetch('https://dummyjson.com/quotes/random')
+        const data = await res.json()
+
+        if (data && data.quote) {
+          const textLower = data.quote.toLowerCase()
+          // Check for any filtered words
+          const hasFilteredWord = BAD_WORDS.some(word => textLower.includes(word))
+
+          if (!hasFilteredWord) {
+            newQuote = `"${data.quote}" — ${data.author}`
+            validQuote = true;
+          }
+        }
+        attempts++;
+      }
+
+      if (validQuote) {
+        setQuote(newQuote)
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }, [])
+
+  // Initial fetch
+  useEffect(() => {
+    fetchQuote()
+  }, [fetchQuote])
+
+  // Typewriter effect
+  useEffect(() => {
+    if (!quote) return
+    setIsTyping(true)
+    let i = 0
+    setDisplayedQuote("")
+
+    const interval = setInterval(() => {
+      setDisplayedQuote(quote.slice(0, i + 1))
+      i++
+      if (i >= quote.length) {
+        clearInterval(interval)
+        setIsTyping(false)
+      }
+    }, 40) // 40ms per char feels very natural
+
+    return () => clearInterval(interval)
+  }, [quote])
+
+  // Fetch new quote 10s after typing finishes
+  useEffect(() => {
+    if (isTyping || !quote) return
+    const timer = setTimeout(() => {
+      fetchQuote()
+    }, 10000)
+    return () => clearTimeout(timer)
+  }, [isTyping, quote, fetchQuote])
   const handleCTA = useCallback(() => scrollToSection('library-content'), [])
-  const catClicks = useRef(0)
 
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
@@ -197,29 +295,13 @@ export default function PublicHero() {
     return () => window.removeEventListener('mousemove', handleMouseMove)
   }, [mouseX, mouseY])
 
-  const btnRef = useRef<HTMLButtonElement>(null)
-  const btnX = useMotionValue(0)
-  const btnY = useMotionValue(0)
-  const btnXSpring = useSpring(btnX, { stiffness: 150, damping: 15, mass: 0.1 })
-  const btnYSpring = useSpring(btnY, { stiffness: 150, damping: 15, mass: 0.1 })
 
-  const handleBtnMouseMove = (e: React.MouseEvent) => {
-    if (!btnRef.current) return
-    const { left, top, width, height } = btnRef.current.getBoundingClientRect()
-    const x = e.clientX - (left + width / 2)
-    const y = e.clientY - (top + height / 2)
-    btnX.set(x * 0.2)
-    btnY.set(y * 0.2)
-  }
-  const handleBtnMouseLeave = () => {
-    btnX.set(0)
-    btnY.set(0)
-  }
 
   return (
     <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden text-charcoal dark:text-white paper-overlay transition-colors duration-500">
 
-      <div className="absolute inset-0 m-auto flex items-center justify-center pointer-events-none opacity-[0.03] dark:opacity-[0.03] mix-blend-multiply dark:mix-blend-screen text-charcoal dark:text-lavender">
+      {/* Logo Watermark */}
+      <div className="absolute inset-0 m-auto flex items-center justify-center pointer-events-none opacity-[0.03] dark:opacity-[0.05] mix-blend-multiply dark:mix-blend-screen text-charcoal dark:text-lavender">
         <Logo className="w-[40vw] max-w-[400px] h-auto" />
       </div>
 
@@ -255,34 +337,20 @@ export default function PublicHero() {
 
         <FloatingMusicNote icon="mdi:music-note-eighth" className="absolute top-[20%] right-[35%] size-16 opacity-80" duration={8} delay={2} />
 
+        <FloatingPetal petalIndex={1} className="w-8 md:w-12 top-[10%] left-[20%]" duration={12} delay={0} />
+        <FloatingPetal petalIndex={2} className="w-6 md:w-8 top-[30%] right-[15%]" duration={15} delay={2} />
+
+        <Fireflies />
+
+        {/* Abstract shapes / UI accents */}
         <motion.span className="absolute bottom-[45%] right-[35%] size-2 rounded-full bg-purple-brand/60 dark:bg-white shadow-[0_0_15px_rgba(107,76,154,0.6)] dark:shadow-[0_0_15px_rgba(255,255,255,1)] mix-blend-multiply dark:mix-blend-screen" animate={{ y: [-40, 40, -40], x: [10, -10, 10], opacity: [0.5, 1, 0.5] }} transition={{ ...floatTransition, duration: 5, delay: 1.5 }} />
         <motion.span className="absolute top-[50%] left-[20%] size-2.5 rounded-full bg-purple-brand shadow-[0_0_12px_rgba(107,76,154,0.8)] mix-blend-multiply dark:mix-blend-screen" animate={{ y: [0, -20, 0], opacity: [0.6, 0.9, 0.6] }} transition={{ ...floatTransition, duration: 4, delay: 2 }} />
       </ParallaxLayer>
 
-      {/* Layer 4: The Core Gateway / Cat */}
-      <ParallaxLayer xProgress={xProgress} yProgress={yProgress} depth={0.08} className="flex flex-col items-center justify-end pb-24 md:pb-32">
-        <div className="relative">
-          <motion.div className="w-64 h-10 rounded-[100%] bg-gradient-to-r from-transparent via-purple-brand/20 to-transparent blur-[12px] dark:opacity-70 opacity-40" animate={{ scale: [0.95, 1.05, 0.95] }} transition={{ ...floatTransition, duration: 4 }} />
-          <motion.button
-            className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 text-charcoal/40 dark:text-white/50 transition-colors hover:text-charcoal/70 dark:hover:text-white/90 cursor-pointer outline-none pointer-events-auto"
-            animate={{ y: [0, -4, 0] }}
-            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-            onClick={() => {
-              catClicks.current += 1
-              if (catClicks.current >= 5) {
-                catClicks.current = 0
-                window.dispatchEvent(new CustomEvent('library:open-gate'))
-              }
-            }}
-            aria-label="Sleeping cat trigger"
-          >
-            <Icon icon="lucide:cat" className="size-10 drop-shadow-[0_0_15px_rgba(0,0,0,0.1)] dark:drop-shadow-[0_0_15px_rgba(255,255,255,0.3)] transition-transform hover:scale-110 duration-300" />
-          </motion.button>
-        </div>
-      </ParallaxLayer>
+      {/* Removed Layer 4 Cat per user request */}
 
       {/* Center Typography */}
-      <div className="relative z-10 flex flex-col items-center text-center pointer-events-none mt-[-80px] px-6">
+      <div className="relative z-10 flex flex-col items-center text-center pointer-events-none px-6 mt-8 sm:mt-16">
         <div className="overflow-hidden mb-6">
           <motion.p
             className="font-sans text-xs sm:text-sm font-semibold tracking-[0.3em] uppercase text-purple-brand/80 dark:text-lavender/90"
@@ -294,7 +362,7 @@ export default function PublicHero() {
           </motion.p>
         </div>
 
-        <div className="overflow-hidden py-2 px-2 md:px-10">
+        <div className="overflow-visible py-2 px-2 md:px-10">
           <motion.h1
             className="font-serif text-[3.5rem] sm:text-7xl md:text-[6rem] leading-[1.05] text-charcoal dark:text-white tracking-tight drop-shadow-[0_0_40px_rgba(0,0,0,0.05)] dark:drop-shadow-[0_0_40px_rgba(255,255,255,0.15)]"
             initial={{ y: '100%', opacity: 0, rotateX: -15 }}
@@ -302,45 +370,98 @@ export default function PublicHero() {
             transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
             style={{ perspective: 1000 }}
           >
-            Pause and <br />
-            <span className="italic font-light text-transparent bg-clip-text bg-gradient-to-br from-purple-brand via-charcoal to-[#8c6b5d] dark:from-lavender dark:via-white dark:to-[#b19cd9] drop-shadow-[0_0_25px_rgba(107,76,154,0.2)] dark:drop-shadow-[0_0_25px_rgba(230,230,250,0.4)] relative inline-block mt-2 md:mt-0">
-              Be With Me
+            What Makes<br />
+            <span className="italic font-light text-transparent bg-clip-text bg-gradient-to-br from-purple-brand via-charcoal to-[#8c6b5d] dark:from-lavender dark:via-white dark:to-[#b19cd9] drop-shadow-[0_0_25px_rgba(107,76,154,0.2)] dark:drop-shadow-[0_0_25px_rgba(230,230,250,0.4)] relative inline-block mt-2 md:mt-0 pr-6">
+              You, You?
             </span>
           </motion.h1>
         </div>
 
-        <motion.p
-          className="mt-8 max-w-2xl font-serif text-lg sm:text-xl text-charcoal/70 dark:text-white/80 leading-relaxed"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.9 }}
+        <motion.div
+          className="mt-8 max-w-2xl font-serif text-lg sm:text-xl text-charcoal/70 dark:text-white/80 leading-relaxed min-h-[80px]"
         >
-          Time doesn't stop, but please, take a breath. If today was the only certainty you had, how much of yourself would you simply let be?
-        </motion.p>
+          {displayedQuote}
+          <motion.span
+            animate={{ opacity: [1, 0, 1] }}
+            transition={{ repeat: Infinity, duration: 0.8, ease: "linear" }}
+            className="inline-block ml-1 font-sans font-light"
+            style={{ transform: 'translateY(-2px)' }}
+          >
+            |
+          </motion.span>
+          <div className="mt-4 text-sm opacity-60 font-sans tracking-widest select-none">
+            ⊂(≽^•⩊•^≼)つ
+          </div>
+        </motion.div>
 
         <motion.div
-          className="mt-14 pointer-events-auto"
+          className="mt-16 flex flex-col items-center justify-center relative pointer-events-auto"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 1.1 }}
+          style={{
+            x: useTransform(xProgress, [0, 1], [-30, 30]),
+            y: useTransform(yProgress, [0, 1], [-30, 30]),
+          }}
         >
+          {/* Plain text label floating above */}
           <motion.button
-            ref={btnRef}
-            onMouseMove={handleBtnMouseMove}
-            onMouseLeave={handleBtnMouseLeave}
             onClick={handleCTA}
-            style={{ x: btnXSpring, y: btnYSpring }}
-            className="group relative overflow-hidden rounded-full bg-white border border-charcoal/10 dark:bg-white/5 dark:border-white/15 shadow-sm px-10 py-5 backdrop-blur-md transition-all duration-300 hover:bg-warm-paper dark:hover:bg-white/10 hover:border-purple-brand/30 dark:hover:border-white/30 hover:shadow-[0_0_40px_rgba(107,76,154,0.15)] dark:hover:shadow-[0_0_40px_rgba(107,76,154,0.5)]"
+            className="relative z-20 mb-0 font-sans text-sm sm:text-base font-bold tracking-[0.3em] uppercase text-purple-brand dark:text-lavender hover:text-purple-brand/80 dark:hover:text-lavender/80 transition-colors drop-shadow-[0_0_10px_rgba(107,76,154,0.6)]"
             whileTap={{ scale: 0.95 }}
+            animate={{ y: [-3, 3, -3] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
           >
-            <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-purple-brand/5 dark:via-white/10 to-transparent transition-transform duration-1000 ease-out group-hover:translate-x-full" />
-            <span className="relative z-10 flex items-center gap-3 font-sans text-sm font-semibold tracking-[0.15em] uppercase text-charcoal dark:text-white">
-              <Icon icon="lucide:sparkles" className="size-4 text-purple-brand dark:text-lavender transition-transform group-hover:rotate-12 group-hover:scale-125" />
-              Walk With Ice
-            </span>
+            Who is Ice?
           </motion.button>
+
+          {/* Magical 3D Floating Book / Enchantment Table */}
+          <motion.div
+            className="relative w-48 h-48 sm:w-64 sm:h-64 cursor-pointer -mt-20 sm:-mt-24"
+            onClick={handleCTA}
+          >
+            <div className="absolute inset-0 bg-purple-brand/20 dark:bg-lavender/20 blur-[60px] rounded-full transition-all duration-500 hover:bg-purple-brand/30 dark:hover:bg-lavender/30" />
+
+            <div className="absolute inset-0 z-10 flex items-center justify-center p-8">
+              <motion.img
+                src="/svg/other/book-paging.svg"
+                alt="Animated Book"
+                className="w-full h-full object-contain filter drop-shadow-[0_0_15px_rgba(216,180,254,0.6)]"
+              />
+            </div>
+
+            {/* Magical Letter Particles */}
+            {[...Array(12)].map((_, i) => {
+              const chars = ['ᔑ', 'ʖ', 'ᓵ', '↸', 'ᒷ', '⎓', '⊣', '⍑', '╎', '⋮', 'ꖌ', 'ꖎ', 'ᒲ', 'リ', '𝙹', '!¡', 'ᑑ', '∷', 'ᓭ', 'ℸ', '⚍', '⍊', '∴', 'x', '||', '⨅']
+              const randomChar = chars[Math.floor(Math.random() * chars.length)]
+              return (
+                <motion.div
+                  key={i}
+                  className="absolute top-[65%] left-1/2 z-20 font-sans text-xs font-bold text-purple-400 dark:text-lavender pointer-events-none drop-shadow-[0_0_8px_currentColor] -translate-x-1/2 -translate-y-1/2"
+                  initial={{ x: 0, y: 0, opacity: 0, scale: 0.2 }}
+                  animate={{
+                    x: (Math.random() - 0.5) * 80,
+                    y: -20 - Math.random() * 60,
+                    opacity: [0, 1, 0],
+                    scale: [0.5, 1.2, 0.5],
+                    rotate: [0, Math.random() * 180 - 90]
+                  }}
+                  transition={{
+                    duration: 3 + Math.random() * 4,
+                    repeat: Infinity,
+                    delay: Math.random() * 3,
+                    ease: "easeOut"
+                  }}
+                >
+                  {randomChar}
+                </motion.div>
+              )
+            })}
+          </motion.div>
         </motion.div>
       </div>
+
+
     </section>
   )
 }
