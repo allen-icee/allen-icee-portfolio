@@ -13,6 +13,8 @@ export interface MockJournalEntry {
   signature: string
 }
 
+import type { Experience } from '../types'
+
 export interface MockProject {
   id: string
   title: string
@@ -41,15 +43,9 @@ export const mockSkills: MockSkill[] = [
 ]
 
 export const mockJournal: MockJournalEntry = {
-  title: 'The Open Journal',
-  body: `Dear Visitor,
-
-My name is Ice. Every project begins as a blank page — a quiet space where curiosity meets craft. I build things for the web that feel as good as they work: thoughtful interfaces, sturdy backends, and experiences that linger long after the tab closes.
-
-This library is my collection of experiments, failures, fixes, and finished work. Each repository here is a chapter — some short, some still being written. I believe the best code reads like a letter: clear, intentional, and written with someone on the other end.
-
-So pull up a chair, flip through the shelves, and stay as long as you like. The kettle is always on.`,
-  signature: '— Ice',
+  title: "The Keeper's Desk",
+  body: `If you have chosen to pause... welcome.<br/><br/>The world outside rarely stops moving, so I built this space as an anchor. It began as a collection of lines of code and quiet thoughts, but it has become something more—a place to simply let be.<br/><br/>Everything on these shelves is a record of persistence and curiosity. Some projects taught me how to endure the noise, while others reminded me how to build a shelter from it.<br/><br/>Catch your breath. You don't have to rush here.`,
+  signature: 'With grace, Ice',
 }
 
 export const mockProjects: MockProject[] = [
@@ -135,3 +131,37 @@ export const mockArtworks: MockArtwork[] = [
     story: 'Taken during a 5 AM walk along the pier. The figures in the distance were strangers, but in that half-light they could have been anyone — ghosts of conversations never had, moving through the mist.',
   },
 ]
+
+export const mockExperiences: Experience[] = [
+  {
+    id: 'exp-1',
+    role: 'Lead Architect',
+    company: 'The Quiet Archive',
+    timeline: { start: '2024' },
+    description: 'Designed and built the foundational architecture for an internal knowledge base that prioritizes focus and deep reading. Engineered custom rich-text editors and a bespoke document tagging system that allows users to traverse notes like walking through a library.',
+    technologies: ['React', 'TypeScript', 'Node.js', 'ProseMirror', 'PostgreSQL'],
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  },
+  {
+    id: 'exp-2',
+    role: 'Frontend Engineer',
+    company: 'Sanctuary UI',
+    timeline: { start: '2022', end: '2024' },
+    description: 'Developed accessible, highly-polished interface components for a design system used by over 40 internal tools. Championed the adoption of motion-design principles to create micro-interactions that feel calm and rewarding rather than fast and frantic.',
+    technologies: ['React', 'Framer Motion', 'Tailwind CSS', 'Storybook', 'Figma'],
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  },
+  {
+    id: 'exp-3',
+    role: 'Creative Developer',
+    company: 'Midnight Canvas',
+    timeline: { start: '2020', end: '2022' },
+    description: 'Built interactive generative art experiments and digital installations for a boutique creative agency. Focused on WebGL shaders and canvas performance optimization to run smoothly on mobile devices.',
+    technologies: ['JavaScript', 'Three.js', 'GLSL', 'Vue.js'],
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  }
+]
+

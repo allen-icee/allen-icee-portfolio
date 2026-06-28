@@ -365,7 +365,7 @@ const CAT_DATA: CatConfig[] = [
 export default function CompWanderingCat() {
   return (
     <div
-      className="fixed bottom-0 left-0 right-0 z-50 h-16 select-none"
+      className="fixed bottom-[-15px] left-0 right-0 z-50 h-16 select-none"
       aria-hidden
     >
       {CAT_DATA.map((cat) => (
