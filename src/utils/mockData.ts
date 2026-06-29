@@ -34,12 +34,61 @@ export interface MockArtwork {
 }
 
 export const mockSkills: MockSkill[] = [
-  { id: 'react', name: 'React', category: 'Frontend', yearsOfExperience: 4, confidence: 90, icon: 'logos:react' },
-  { id: 'typescript', name: 'TypeScript', category: 'Language', yearsOfExperience: 3, confidence: 82, icon: 'logos:typescript-icon' },
-  { id: 'nodejs', name: 'Node.js', category: 'Backend', yearsOfExperience: 3, confidence: 78, icon: 'logos:nodejs-icon' },
-  { id: 'firebase', name: 'Firebase', category: 'Backend', yearsOfExperience: 2, confidence: 65, icon: 'logos:firebase' },
-  { id: 'tailwind', name: 'Tailwind CSS', category: 'Frontend', yearsOfExperience: 3, confidence: 85, icon: 'logos:tailwindcss-icon' },
-  { id: 'figma', name: 'Figma', category: 'Design', yearsOfExperience: 2, confidence: 60, icon: 'logos:figma' },
+  // Frontend
+  { id: 'react', name: 'React.js', category: 'Frontend', yearsOfExperience: 3, confidence: 90, icon: 'logos:react' },
+  { id: 'javascript', name: 'JavaScript', category: 'Frontend', yearsOfExperience: 4, confidence: 95, icon: 'logos:javascript' },
+  { id: 'typescript', name: 'TypeScript', category: 'Frontend', yearsOfExperience: 3, confidence: 85, icon: 'logos:typescript-icon' },
+  { id: 'html5', name: 'HTML5', category: 'Frontend', yearsOfExperience: 5, confidence: 95, icon: 'logos:html-5' },
+  { id: 'css3', name: 'CSS3', category: 'Frontend', yearsOfExperience: 5, confidence: 90, icon: 'logos:css-3' },
+  { id: 'tailwindcss', name: 'Tailwind CSS', category: 'Frontend', yearsOfExperience: 3, confidence: 90, icon: 'logos:tailwindcss-icon' },
+  { id: 'ionic', name: 'Ionic Framework', category: 'Frontend', yearsOfExperience: 2, confidence: 75, icon: 'logos:ionic-icon' },
+  { id: 'vite', name: 'Vite', category: 'Frontend', yearsOfExperience: 2, confidence: 85, icon: 'logos:vitejs' },
+  
+  // Backend & Database
+  { id: 'laravel', name: 'Laravel', category: 'Backend', yearsOfExperience: 2, confidence: 75, icon: 'logos:laravel' },
+  { id: 'firebase', name: 'Firebase', category: 'Backend', yearsOfExperience: 3, confidence: 85, icon: 'logos:firebase' },
+  { id: 'firestore', name: 'Firestore', category: 'Database', yearsOfExperience: 3, confidence: 80, icon: 'vscode-icons:file-type-firebase' },
+  { id: 'mysql', name: 'MySQL', category: 'Database', yearsOfExperience: 3, confidence: 80, icon: 'logos:mysql' },
+  { id: 'postgresql', name: 'PostgreSQL', category: 'Database', yearsOfExperience: 2, confidence: 75, icon: 'logos:postgresql' },
+  { id: 'sqlite', name: 'SQLite', category: 'Database', yearsOfExperience: 2, confidence: 70, icon: 'logos:sqlite' },
+  
+  // Mobile & Cross-Platform
+  { id: 'capacitor', name: 'Capacitor', category: 'Mobile', yearsOfExperience: 2, confidence: 75, icon: 'logos:capacitorjs-icon' },
+  { id: 'android', name: 'Android Deployment', category: 'Mobile', yearsOfExperience: 2, confidence: 70, icon: 'logos:android-icon' },
+  { id: 'electron', name: 'Electron.js', category: 'Desktop', yearsOfExperience: 1, confidence: 65, icon: 'logos:electron' },
+  
+  // Tools & Platforms
+  { id: 'git', name: 'Git', category: 'Tools', yearsOfExperience: 4, confidence: 90, icon: 'logos:git-icon' },
+  { id: 'github', name: 'GitHub', category: 'Tools', yearsOfExperience: 4, confidence: 90, icon: 'mdi:github' },
+  { id: 'vscode', name: 'VS Code', category: 'Tools', yearsOfExperience: 5, confidence: 95, icon: 'logos:visual-studio-code' },
+  { id: 'ai', name: 'AI-Assisted Dev', category: 'Tools', yearsOfExperience: 2, confidence: 95, icon: 'lucide:bot' },
+  { id: 'functions', name: 'Firebase Functions', category: 'Tools', yearsOfExperience: 2, confidence: 75, icon: 'logos:google-cloud' },
+  { id: 'supabase', name: 'Supabase', category: 'Tools', yearsOfExperience: 1, confidence: 70, icon: 'logos:supabase-icon' },
+  
+  // Testing & Networking
+  { id: 'cypress', name: 'Cypress', category: 'Testing', yearsOfExperience: 1, confidence: 65, icon: 'logos:cypress-icon' },
+  { id: 'phpunit', name: 'PHPUnit', category: 'Testing', yearsOfExperience: 1, confidence: 60, icon: 'vscode-icons:file-type-phpunit' },
+  { id: 'ccna', name: 'CCNA 1 & 2', category: 'Networking', yearsOfExperience: 2, confidence: 80, icon: 'lucide:network' },
+  { id: 'routing', name: 'Switching & Routing', category: 'Networking', yearsOfExperience: 2, confidence: 80, icon: 'lucide:router' },
+  
+  // Creative & Productivity
+  { id: 'krita', name: 'Krita', category: 'Creative', yearsOfExperience: 4, confidence: 85, icon: 'simple-icons:krita' },
+  { id: 'ibispaint', name: 'IbisPaint', category: 'Creative', yearsOfExperience: 4, confidence: 90, icon: 'lucide:paint-brush' },
+  { id: 'capcut', name: 'CapCut', category: 'Creative', yearsOfExperience: 3, confidence: 85, icon: 'lucide:video' },
+  { id: 'msword', name: 'Microsoft Word', category: 'Creative', yearsOfExperience: 5, confidence: 95, icon: 'mdi:file-word-box' },
+  { id: 'mspowerpoint', name: 'Microsoft PowerPoint', category: 'Creative', yearsOfExperience: 5, confidence: 90, icon: 'mdi:file-powerpoint-box' },
+  { id: 'msexcel', name: 'Microsoft Excel', category: 'Creative', yearsOfExperience: 4, confidence: 85, icon: 'mdi:file-excel-box' },
+  { id: 'googlesheets', name: 'Google Sheet', category: 'Creative', yearsOfExperience: 4, confidence: 90, icon: 'mdi:google-spreadsheet' },
+  
+  // Professional Skills
+  { id: 'communication', name: 'Client Communication', category: 'Professional', yearsOfExperience: 3, confidence: 90, icon: 'lucide:message-square' },
+  { id: 'presentation', name: 'Project Presentation', category: 'Professional', yearsOfExperience: 3, confidence: 85, icon: 'lucide:presentation' },
+  { id: 'uiux', name: 'UI/UX Design', category: 'Professional', yearsOfExperience: 3, confidence: 85, icon: 'lucide:layout' },
+  { id: 'delivery', name: 'Project Delivery', category: 'Professional', yearsOfExperience: 3, confidence: 90, icon: 'lucide:box' },
+  { id: 'problemsolving', name: 'Problem Solving', category: 'Professional', yearsOfExperience: 4, confidence: 95, icon: 'lucide:puzzle' },
+  { id: 'docs', name: 'Technical Documentation', category: 'Professional', yearsOfExperience: 3, confidence: 80, icon: 'lucide:file-text' },
+  { id: 'team', name: 'Team Collaboration', category: 'Professional', yearsOfExperience: 3, confidence: 90, icon: 'lucide:users' },
+  { id: 'adaptability', name: 'Adaptability', category: 'Professional', yearsOfExperience: 4, confidence: 95, icon: 'lucide:refresh-cw' },
 ]
 
 export const mockJournal: MockJournalEntry = {
@@ -135,31 +184,41 @@ export const mockArtworks: MockArtwork[] = [
 export const mockExperiences: Experience[] = [
   {
     id: 'exp-1',
-    role: 'Lead Architect',
-    company: 'The Quiet Archive',
-    timeline: { start: '2024' },
-    description: 'Designed and built the foundational architecture for an internal knowledge base that prioritizes focus and deep reading. Engineered custom rich-text editors and a bespoke document tagging system that allows users to traverse notes like walking through a library.',
-    technologies: ['React', 'TypeScript', 'Node.js', 'ProseMirror', 'PostgreSQL'],
+    role: 'Freelance Digital Artist',
+    company: 'Gerona, Province of Tarlac, Philippines (Remote)',
+    timeline: { start: 'June 2023', end: 'Current' },
+    description: '• Managed freelance digital art commissions for online clients, handling project discussions, revisions, and final asset delivery.\n• Designed digital illustrations, branding assets, and media content for YouTube channels and online publications.\n• Maintained consistent client communication and delivered projects within agreed timelines.',
+    technologies: ['Digital Illustration', 'Branding', 'Client Communication'],
     createdAt: Date.now(),
     updatedAt: Date.now(),
   },
   {
     id: 'exp-2',
-    role: 'Frontend Engineer',
-    company: 'Sanctuary UI',
-    timeline: { start: '2022', end: '2024' },
-    description: 'Developed accessible, highly-polished interface components for a design system used by over 40 internal tools. Championed the adoption of motion-design principles to create micro-interactions that feel calm and rewarding rather than fast and frantic.',
-    technologies: ['React', 'Framer Motion', 'Tailwind CSS', 'Storybook', 'Figma'],
+    role: 'Management Information Systems Unit Full-Stack Developer Intern',
+    company: 'LGU Gerona - Poblacion 3, Gerona, Tarlac (Onsite)',
+    timeline: { start: 'February 2026', end: 'May 2026' },
+    description: '• Developed and maintained multiple LAN-based and full-stack systems for LGU Gerona, including queue management, permit processing, and library operations.\n• Coordinated with department heads and municipal staff to gather system requirements and improve operational workflows.\n• Assisted visitors and staff with technical troubleshooting, printing services, and software usage support.',
+    technologies: ['Full-Stack Development', 'LAN-based Systems', 'Troubleshooting'],
     createdAt: Date.now(),
     updatedAt: Date.now(),
   },
   {
     id: 'exp-3',
-    role: 'Creative Developer',
-    company: 'Midnight Canvas',
-    timeline: { start: '2020', end: '2022' },
-    description: 'Built interactive generative art experiments and digital installations for a boutique creative agency. Focused on WebGL shaders and canvas performance optimization to run smoothly on mobile devices.',
-    technologies: ['JavaScript', 'Three.js', 'GLSL', 'Vue.js'],
+    role: 'Speech Annotator',
+    company: 'TransPerfect Tranlations International (Remote)',
+    timeline: { start: 'June 2025', end: 'July 2025' },
+    description: '• Analyzed and annotated audio datasets with high attention to detail to support machine learning and speech recognition systems.\n• Maintained quality standards and accuracy while processing large volumes of data under strict deadlines.\n• Adapted quickly to proprietary annotation tools and evolving project guidelines.',
+    technologies: ['Audio Annotation', 'Machine Learning Support', 'Data Processing'],
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  },
+  {
+    id: 'exp-4',
+    role: 'ICT Work Immersion Completer',
+    company: 'Corazon C. Aquino HS (Onsite)',
+    timeline: { start: 'S.Y 2021', end: '2022' },
+    description: '• Assembled and configured computer hardware systems, including operating systems and driver installation.\n• Established Local Area Network (LAN) infrastructures through router setup, cable crimping, and IP configuration.\n• Assisted with technical troubleshooting and basic system maintenance tasks.',
+    technologies: ['Hardware Assembly', 'LAN Setup', 'System Maintenance'],
     createdAt: Date.now(),
     updatedAt: Date.now(),
   }

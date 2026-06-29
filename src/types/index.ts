@@ -11,6 +11,7 @@ export interface Project {
   description: string
   techStack: string[]
   coverImage: string
+  images?: string[]
   githubLink: string
   liveUrl?: string
   figmaUrl?: string

@@ -359,7 +359,7 @@ function SingleCat({ config }: { config: CatConfig }) {
 const CAT_DATA: CatConfig[] = [
   { id: 'milktea', name: 'MILKTEA', spriteUrl: '/cats/cat 1.png', accessoryUrl: '/cats/cat 1 16x16 animation with gold glasses hearts.png', startXRatio: 0.2 },
   { id: 'kyatkyat', name: 'KYATKYAT', spriteUrl: '/cats/cat 1.6.png', accessoryUrl: '/cats/cat 1 16x16 animation with red bow.png', startXRatio: 0.5 },
-  { id: 'macee', name: 'MACEE', spriteUrl: '/cats/cat 1.9.png', accessoryUrl: '/cats/cat 1 16x16 animation cupid.png', startXRatio: 0.8 },
+  { id: 'macee', name: 'ALLEN ICEE', spriteUrl: '/cats/cat 1.9.png', accessoryUrl: '/cats/cat 1 16x16 animation cupid.png', startXRatio: 0.8 },
 ]
 
 export default function CompWanderingCat() {

@@ -38,7 +38,7 @@ export function KeeperRecord() {
           <span className="font-semibold">He/Him</span>
         </div>
         <div className="flex justify-between border-b border-[#C8B8A6]/30 pb-1 border-dashed">
-          <span className="opacity-70">Energy Level</span>
+          <span className="opacity-70">Social Level</span>
           <span className="font-semibold">Battery Saving Mode</span>
         </div>
         <div className="flex justify-between border-b border-[#C8B8A6]/30 pb-1 border-dashed">

@@ -1,174 +1,394 @@
-import { motion } from 'framer-motion'
+import React, { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Icon } from '@iconify/react'
 import { useCollection } from '../../hooks/useCollection'
+import { mockSkills } from '../../utils/mockData'
 import type { Skill } from '../../types'
 
-function ReferenceCard({ skill, index }: { skill: Skill; index: number }) {
-  const totalDots = 5
-  const filledDots = Math.max(1, Math.round(skill.confidence / 20))
+// Book Generation Constants
+const BOOK_COLORS = [
+  { base: 'bg-[#2B2329]', border: 'border-[#1E181D]', text: 'text-[#C9A98E]' }, // Deep Violet
+  { base: 'bg-[#1F2226]', border: 'border-[#141618]', text: 'text-[#B4AE9F]' }, // Slate
+  { base: 'bg-[#312323]', border: 'border-[#221818]', text: 'text-[#D2BBA0]' }, // Dark Crimson
+  { base: 'bg-[#212421]', border: 'border-[#161816]', text: 'text-[#A0B09A]' }, // Emerald Ash
+  { base: 'bg-[#3C3228]', border: 'border-[#28211A]', text: 'text-[#E3D4B6]' }, // Brown Leather
+]
+
+const HEIGHTS = ['180px', '200px', '160px', '220px', '190px', '170px', '210px']
+
+type BookType = 'category' | 'individual' | 'dummy'
+
+interface BookProps {
+  title: string
+  type: BookType
+  index: number
+  skills?: Skill[]
+  icon?: string
+  onClick?: () => void
+}
+
+function BookSpine({ title, type, index, skills, icon, onClick }: BookProps) {
+  const color = BOOK_COLORS[index % BOOK_COLORS.length]
+  const heightVal = HEIGHTS[index % HEIGHTS.length]
+
+  // Category books are encyclopedias (thick), individual/dummy books are thin
+  const widthVal = type === 'category'
+    ? ['32px', '40px', '48px'][index % 3]
+    : ['28px', '32px', '36px'][index % 3]
+
+  // Deterministic wear/details
+  const hasRibs = index % 3 !== 0
+  const ribCount = (index % 3) + 2
 
   return (
-    <motion.div
-      className="group relative flex flex-col justify-between overflow-hidden rounded-sm border border-[#D2BBA0] bg-[#FDFBF7] p-5 md:p-6 shadow-[2px_4px_10px_rgba(0,0,0,0.05)] transition-all duration-400 hover:shadow-[4px_8px_20px_rgba(0,0,0,0.1)] dark:border-white/5 dark:bg-[#22201F] dark:shadow-[2px_4px_10px_rgba(0,0,0,0.4)] dark:hover:shadow-[4px_8px_20px_rgba(0,0,0,0.6)] z-10 hover:z-20"
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-40px' }}
-      transition={{ duration: 0.5, delay: Math.min((index % 4) * 0.1, 0.4), ease: 'easeOut' }}
-      whileHover="hover"
+    <div
+      className="relative group cursor-pointer shrink-0 transition-transform duration-300 hover:!-translate-y-4 hover:!rotate-[-2deg] z-10 hover:z-50"
+      style={{ width: widthVal, height: heightVal }}
+      onClick={onClick}
     >
-      <motion.div
-        className="absolute inset-0 z-0 pointer-events-none"
-        variants={{ hover: { y: -6, scale: 1.02, transition: { duration: 0.3 } } }}
-      />
-      {/* We apply the actual hover transform to the wrapper to lift the card */}
-      <div className="absolute inset-0 pointer-events-none transition-transform duration-300 group-hover:-translate-y-2 group-hover:scale-[1.02]" />
+      {/* The Physical Spine */}
+      <div className={`absolute inset-0 ${color.base} ${color.border} border-x border-t rounded-t-sm flex-col py-4 shadow-[inset_2px_0_4px_rgba(255,255,255,0.05),inset_-2px_0_4px_rgba(0,0,0,0.3),2px_0_10px_rgba(0,0,0,0.5)] flex items-center justify-between`}>
 
-      {/* Very Subtle Paper Texture */}
-      <div className="pointer-events-none absolute inset-0 opacity-[0.02] dark:opacity-[0.03]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\\\'0 0 200 200\\\' xmlns=\\\'http://www.w3.org/2000/svg\\\'%3E%3Cfilter id=\\\'noiseFilter\\\'%3E%3CfeTurbulence type=\\\'fractalNoise\\\' baseFrequency=\\\'0.85\\\' numOctaves=\\\'3\\\' stitchTiles=\\\'stitch\\\'/%3E%3C/filter%3E%3Crect width=\\\'100%25\\\' height=\\\'100%25\\\' filter=\\\'url(%23noiseFilter)\\\'/%3E%3C/svg%3E")' }} />
+        {/* Spine Top Detail */}
+        <div className="w-full flex-col gap-1 px-2 flex items-center opacity-70 shrink-0">
+          <div className="h-0.5 w-full bg-current opacity-30" />
+          <div className="h-px w-3/4 bg-current opacity-30" />
+        </div>
 
-      {/* Outer wrapper to hold content and move up on hover */}
-      <div className="relative z-10 flex flex-col h-full transition-transform duration-300 group-hover:-translate-y-2 group-hover:scale-[1.02]">
-        
-        {/* Header (Icon + Category) */}
-        <div className="mb-4 flex items-start justify-between">
-          <motion.div 
-            className="flex size-10 items-center justify-center text-charcoal/80 dark:text-[#EAE0D5]/80"
-            variants={{ hover: { rotateZ: 8, scale: 1.1, transition: { duration: 0.4 } } }}
+        {/* Ribs (Binding ridges) */}
+        {hasRibs && (
+          <div className="absolute top-[20%] bottom-[30%] w-full flex-col flex justify-between opacity-40 pointer-events-none">
+            {Array.from({ length: ribCount }).map((_, i) => (
+              <div key={i} className="h-1 w-full border-y shadow-[0_2px_2px_rgba(0,0,0,0.5)] bg-black/40 border-white/10" />
+            ))}
+          </div>
+        )}
+
+        {/* Title */}
+        {type !== 'dummy' && (
+          <div
+            className={`flex-1 flex items-center justify-center font-serif ${type === 'category' ? 'text-[10px]' : 'text-[8px]'} font-bold tracking-widest uppercase ${color.text} drop-shadow-sm whitespace-nowrap overflow-hidden text-ellipsis py-2 w-full`}
+            style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}
           >
-            <Icon icon={skill.icon} className="size-8 drop-shadow-sm" />
-          </motion.div>
-          <span className="font-sans text-[10px] font-bold tracking-widest uppercase text-[#8B5A2B]/60 dark:text-lavender/60 border border-[#8B5A2B]/20 dark:border-lavender/20 px-2 py-0.5 rounded-sm bg-[#8B5A2B]/5 dark:bg-lavender/5">
-            {skill.category}
-          </span>
-        </div>
+            {title}
+          </div>
+        )}
 
-        {/* Body (Name + Details) */}
-        <div className="flex-1 border-b border-charcoal/10 dark:border-white/10 pb-4 mb-4">
-          <h3 className="font-serif text-xl font-bold text-[#4E342E] dark:text-[#EAE0D5]">
-            {skill.name}
-          </h3>
-          <p className="mt-1 font-body text-xs text-[#5C3A21]/70 dark:text-[#EAE0D5]/60 italic" style={{ fontFamily: '"Comic Sans MS", cursive, sans-serif' }}>
-            {skill.yearsOfExperience} {skill.yearsOfExperience === 1 ? 'year' : 'years'} studied
-          </p>
-        </div>
+        {/* Dummy Decor */}
+        {type === 'dummy' && (
+          <div className="flex-1 w-full flex flex-col justify-center gap-4 py-4 px-2 opacity-20">
+            <div className="h-px w-full bg-current shadow-[0_1px_1px_rgba(255,255,255,0.1)]" />
+            <div className="h-px w-full bg-current shadow-[0_1px_1px_rgba(255,255,255,0.1)]" />
+            <div className="h-px w-full bg-current shadow-[0_1px_1px_rgba(255,255,255,0.1)]" />
+          </div>
+        )}
 
-        {/* Comfort Level (Circles) */}
-        <div className="flex flex-col gap-2">
-          <span className="font-sans text-[9px] uppercase tracking-widest text-[#8B5A2B]/60 dark:text-white/40">
-            Comfort Level
-          </span>
-          <div className="flex gap-1.5" aria-label={`Comfort level ${filledDots} out of 5`}>
-            {Array.from({ length: totalDots }).map((_, i) => (
-              <span
-                key={i}
-                className={`size-2.5 rounded-full border ${i < filledDots ? 'bg-[#8B5A2B] border-[#8B5A2B] dark:bg-lavender dark:border-lavender' : 'bg-transparent border-[#8B5A2B]/30 dark:border-white/20'}`}
-              />
+        {/* Spine Bottom Icon */}
+        {type !== 'dummy' && (
+          <div className="mt-1 flex items-center justify-center opacity-70 shrink-0">
+            <Icon icon={icon || 'lucide:library'} className={`${type === 'category' ? 'size-4 md:size-5' : 'size-3'} text-current drop-shadow-sm`} />
+          </div>
+        )}
+      </div>
+
+      {/* Hover Tooltip for Category Books (Hidden on mobile) */}
+      {type === 'category' && skills && (
+        <div className="hidden md:flex absolute left-full top-1/2 -translate-y-1/2 ml-2 w-64 bg-[#F9F6F0] dark:bg-[#1A1816] rounded-sm p-4 shadow-[5px_5px_20px_rgba(0,0,0,0.1)] dark:shadow-[5px_5px_20px_rgba(0,0,0,0.6)] border border-black/10 dark:border-white/10 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-300 origin-left scale-95 group-hover:scale-100 flex-col gap-3 z-[100]">
+          <h4 className="font-serif font-bold text-sm text-charcoal dark:text-white/90 border-b border-black/10 dark:border-white/10 pb-2">
+            {title}
+          </h4>
+          <div className="grid grid-cols-2 gap-y-3 gap-x-2">
+            {skills.map(s => (
+              <div key={s.id} className="flex items-center gap-2 overflow-hidden">
+                <Icon icon={s.icon} className="size-4 shrink-0 text-charcoal/70 dark:text-white/70" />
+                <span className="font-sans text-[10px] text-charcoal/80 dark:text-white/80 truncate">
+                  {s.name}
+                </span>
+              </div>
             ))}
           </div>
         </div>
-      </div>
+      )}
+    </div>
+  )
+}
 
-      {/* Hidden Note (Slides up on hover) */}
-      <motion.div 
-        className="absolute bottom-0 left-0 right-0 bg-[#EAE0D5] dark:bg-[#1A1412] px-5 py-3 border-t border-[#D2BBA0] dark:border-white/10 z-20 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] dark:shadow-[0_-4px_10px_rgba(0,0,0,0.3)]"
-        initial={{ y: '100%', opacity: 0 }}
-        variants={{ hover: { y: 0, opacity: 1, transition: { duration: 0.3, ease: 'easeOut' } } }}
+function WallDiplomas() {
+  return (
+    <div className="flex flex-col md:flex-row items-center justify-center gap-12 md:gap-20 w-full relative">
+      {/* College Diploma (Hanging) */}
+      <motion.div
+        className="relative group shrink-0"
+        initial={{ opacity: 0, scale: 0.95 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true }}
       >
-        <p className="font-body text-xs italic text-[#5C3A21]/80 dark:text-[#EAE0D5]/80 leading-relaxed text-center" style={{ fontFamily: '"Comic Sans MS", cursive, sans-serif' }}>
-          "A frequently referenced tool in the collection."
-        </p>
+        <div className="absolute inset-0 bg-black/20 dark:bg-black/40 blur-xl translate-y-6 translate-x-4 -z-10" />
+        <a href="https://www.tsu.edu.ph/" target="_blank" rel="noopener noreferrer" className="block w-[340px] h-[260px] md:w-[420px] md:h-[300px] bg-[#1e1512] p-4 shadow-2xl rounded-sm border-2 border-[#120D0A] relative overflow-hidden transition-transform duration-500 hover:scale-[1.02] cursor-pointer">
+          <div className="w-full h-full bg-[#EFEBE4] p-3 md:p-4 border shadow-inner flex">
+            <div className="w-full h-full border border-black/15 flex flex-col items-center justify-center p-4 text-center relative overflow-hidden">
+              <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none">
+                <img src="/image/TSULogo.png" alt="" className="w-32 h-32 object-contain" />
+              </div>
+              <div className="w-full flex items-center justify-start gap-3 mb-3 relative z-10">
+                <img src="/image/TSULogo.png" alt="TSU Logo" className="w-8 h-8 object-contain" />
+                <h3 className="font-serif text-xs md:text-sm text-black/80 tracking-[0.15em] uppercase font-bold">Tarlac State University</h3>
+              </div>
+              <h2 className="font-serif text-lg md:text-xl font-bold text-[#3B2519] mb-1 leading-tight relative z-10">Bachelor of Science in Information Technology</h2>
+              <p className="font-sans text-[9px] md:text-[10px] text-black/60 tracking-wider uppercase mb-5 relative z-10">Specialization in Web & Mobile Application</p>
+              <div className="flex w-full items-end justify-between px-2 mt-auto relative z-10">
+                <div className="text-left">
+                  <p className="font-serif text-[10px] md:text-xs font-bold text-[#8B5A2B] uppercase tracking-widest mb-1">Magna Cum Laude</p>
+                  <p className="font-serif text-xs font-bold text-black/80">July 2026</p>
+                </div>
+                <div className="bg-gradient-to-br from-[#D4AF37] via-[#F3E5AB] to-[#AA7C11] text-[#4A3500] size-12 rounded-full flex flex-col items-center justify-center shadow-md border-2 border-[#E9C967] relative">
+                  <div className="absolute inset-1 border border-[#4A3500]/20 rounded-full" />
+                  <Icon icon="lucide:award" className="size-5 opacity-70" />
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* Glass/Plastic Covering Reflection */}
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute inset-0 bg-gradient-to-tr from-white/5 via-white/30 to-transparent opacity-40 mix-blend-overlay" />
+            <div className="absolute -inset-full top-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -rotate-45 translate-x-1/3 opacity-80" />
+            <div className="absolute inset-0 shadow-[inset_0_0_10px_rgba(0,0,0,0.5)]" />
+          </div>
+        </a>
       </motion.div>
-    </motion.div>
+
+      {/* SHS Diploma (Hanging) */}
+      <motion.div
+        className="relative group shrink-0"
+        initial={{ opacity: 0, scale: 0.95 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true }}
+      >
+        <div className="absolute inset-0 bg-black/20 dark:bg-black/40 blur-xl translate-y-6 translate-x-4 -z-10" />
+        <a href="https://www.facebook.com/p/Corazon-C-Aquino-High-School-100063686300516/" target="_blank" rel="noopener noreferrer" className="block w-[340px] h-[260px] md:w-[420px] md:h-[300px] bg-[#1a1a1a] p-4 shadow-2xl rounded-sm border-2 border-[#0A0A0A] relative overflow-hidden transition-transform duration-500 hover:scale-[1.02] cursor-pointer">
+          <div className="w-full h-full bg-[#EFEBE4] p-3 md:p-4 border shadow-inner flex">
+            <div className="w-full h-full border border-black/15 flex flex-col items-center justify-center p-4 text-center relative overflow-hidden">
+              <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none">
+                <img src="/image/CCAHSLogo.png" alt="" className="w-32 h-32 object-contain" />
+              </div>
+              <div className="w-full flex items-center justify-start gap-3 mb-3 relative z-10">
+                <img src="/image/CCAHSLogo.png" alt="CCAHS Logo" className="w-8 h-8 object-contain" />
+                <h3 className="font-serif text-xs md:text-sm text-black/80 tracking-[0.1em] uppercase font-bold">Corazon C. Aquino HS</h3>
+              </div>
+              <h2 className="font-serif text-lg md:text-xl font-bold text-[#3B2519] mb-1 relative z-10">TVL-Information and Communications Technology</h2>
+              <p className="font-sans text-[9px] md:text-[10px] text-black/60 tracking-wider uppercase mb-5 relative z-10">Computer Systems Servicing (CSS)</p>
+              <div className="flex w-full items-end justify-between px-2 mt-auto relative z-10">
+                <div className="text-left">
+                  <p className="font-serif text-[10px] md:text-xs font-bold text-[#8B5A2B] uppercase tracking-widest mb-1">With High Honors</p>
+                  <p className="font-serif text-xs font-bold text-black/80">July 2022</p>
+                </div>
+                <div className="bg-gradient-to-br from-[#D4AF37] via-[#F3E5AB] to-[#AA7C11] text-[#4A3500] size-12 rounded-full flex flex-col items-center justify-center shadow-md border-2 border-[#E9C967] relative">
+                  <div className="absolute inset-1 border border-[#4A3500]/20 rounded-full" />
+                  <Icon icon="lucide:award" className="size-5 opacity-70" />
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* Glass/Plastic Covering Reflection */}
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute inset-0 bg-gradient-to-tr from-white/5 via-white/30 to-transparent opacity-40 mix-blend-overlay" />
+            <div className="absolute -inset-full top-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -rotate-45 translate-x-1/3 opacity-80" />
+            <div className="absolute inset-0 shadow-[inset_0_0_10px_rgba(0,0,0,0.5)]" />
+          </div>
+        </a>
+      </motion.div>
+    </div>
   )
 }
 
 export default function PublicSkills() {
   const { items: skills, loading } = useCollection<Skill>('skills')
+  const [activeCategory, setActiveCategory] = useState<{ title: string, skills: Skill[] } | null>(null)
 
-  // Group skills by category
-  const groupedSkills = skills.reduce((acc, skill) => {
+  // Use user's data if firebase is empty/loading
+  const displaySkills = (skills.length > 0 ? skills : mockSkills) as unknown as Skill[]
+
+  // Split Technical vs Professional
+  const technicalSkills = displaySkills.filter(s => s.category !== 'Professional')
+  const professionalSkills = displaySkills.filter(s => s.category === 'Professional')
+
+  // Group Technical Skills by Category for Encyclopedias
+  const groupedTechSkills = technicalSkills.reduce((acc, skill) => {
     if (!acc[skill.category]) acc[skill.category] = []
     acc[skill.category].push(skill)
     return acc
   }, {} as Record<string, Skill[]>)
 
   return (
-    <section id="skills" className="relative w-full overflow-hidden border-y border-[#D2BBA0]/50 px-4 py-20 dark:border-white/5 md:px-6 md:py-32 transition-colors duration-700">
-      
-      {/* Subtle Background Decorations (3-5% Opacity) */}
-      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-        {/* Bookshelf outline hint */}
-        <div className="absolute top-[5%] left-[5%] w-[90%] h-[90%] border-x-4 border-[#8B5A2B] dark:border-white opacity-[0.02] dark:opacity-[0.01]" />
-        
-        {/* Cat Paw Print */}
-        <Icon icon="lucide:paw-print" className="absolute top-[12%] left-[10%] size-12 text-black opacity-[0.03] dark:text-white dark:opacity-[0.03] -rotate-12" />
-        <Icon icon="lucide:paw-print" className="absolute top-[16%] left-[15%] size-10 text-black opacity-[0.03] dark:text-white dark:opacity-[0.03] rotate-12" />
-        
-        {/* Vinyl Record */}
-        <Icon icon="lucide:disc-3" className="absolute bottom-[20%] right-[8%] size-40 text-black opacity-[0.03] dark:text-white dark:opacity-[0.02] animate-[spin_60s_linear_infinite]" />
-        
-        {/* Coffee Ring / Cup */}
-        <Icon icon="lucide:coffee" className="absolute top-[40%] right-[12%] size-28 text-[#5C3A21] opacity-[0.04] dark:text-white dark:opacity-[0.02] rotate-[15deg]" />
-        
-        {/* Music Notes */}
-        <Icon icon="lucide:music" className="absolute bottom-[10%] left-[12%] size-10 text-black opacity-[0.03] dark:text-white dark:opacity-[0.02] rotate-6" />
-        
-        {/* Manga Panel Outline Fake */}
-        <div className="absolute top-[25%] left-[65%] w-64 h-80 border-[6px] border-black dark:border-white opacity-[0.02] dark:opacity-[0.01] -rotate-6" />
-        <div className="absolute top-[30%] left-[63%] w-48 h-32 border-[6px] border-black dark:border-white opacity-[0.02] dark:opacity-[0.01] -rotate-6 bg-black dark:bg-white" />
-      </div>
+    <section id="skills" className="relative w-full overflow-hidden bg-[#F9F6F0] dark:bg-[#141316] border-y border-[#D2BBA0]/50 dark:border-white/5 px-6 py-20 md:py-32 transition-colors duration-700">
 
-      <div className="relative z-10 mx-auto max-w-[1400px]">
+      {/* Subtle Archive Dust Texture */}
+      <div className="absolute inset-0 pointer-events-none opacity-[0.02] dark:opacity-[0.01]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")' }} />
+
+      <div className="relative z-20 mx-auto max-w-[1400px]">
+
+        {/* Section Heading */}
         <motion.div
-          className="mb-16 text-center md:mb-24"
+          className="mb-16 md:mb-24 text-center"
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.5 }}
         >
-          <h2 className="font-serif text-3xl font-bold tracking-tight text-[#4E342E] md:text-5xl dark:text-[#EAE0D5] drop-shadow-sm mb-6">
-            The Reference Shelf
+          <h2 className="font-serif text-3xl md:text-5xl font-medium tracking-tight text-charcoal dark:text-white/90 drop-shadow-sm mb-4">
+            My Expertise & Education
           </h2>
-          <p className="mx-auto max-w-2xl font-body text-sm md:text-base leading-relaxed text-[#8B5A2B] dark:text-[#EAE0D5]/60">
-            Every project begins with the right tools. These are the technologies, languages, and creative software I keep reaching for.
+          <p className="font-sans text-xs md:text-sm tracking-widest uppercase text-[#8B5A2B] dark:text-[#FFB74D]/80">
+            Proof that I can actually read and write.
           </p>
         </motion.div>
 
         {loading ? (
-          <div className="flex min-h-[200px] items-center justify-center gap-3 text-sm font-medium text-[#8B5A2B]/60 dark:text-white/40">
+          <div className="flex items-center justify-center gap-2 py-12 text-[#8B5A2B] dark:text-[#FFB74D]/80">
             <Icon icon="lucide:loader-circle" className="size-5 animate-spin" />
             Dusting the shelves…
           </div>
-        ) : skills.length === 0 ? (
-          <p className="py-12 text-center text-sm text-[#8B5A2B]/60 dark:text-[#EAE0D5]/50">The shelves are currently empty.</p>
         ) : (
-          <div className="flex flex-col gap-20 md:gap-28">
-            {Object.entries(groupedSkills).map(([category, categorySkills]) => (
-              <div key={category} className="relative">
-                {/* Shelf Label */}
-                <div className="absolute -top-10 left-1/2 -translate-x-1/2 md:left-4 md:translate-x-0 z-20">
-                  <div className="bg-[#D2BBA0]/40 dark:bg-white/5 border border-[#8B5A2B]/20 dark:border-white/10 px-6 py-1.5 rounded-sm shadow-sm backdrop-blur-md">
-                    <h3 className="font-serif text-lg md:text-xl text-[#5C3A21] dark:text-[#EAE0D5] italic font-medium">
-                      {category}
-                    </h3>
-                  </div>
-                </div>
+          <div className="flex flex-col gap-12 w-full items-center">
 
-                {/* The Shelf Cards */}
-                <div className="relative z-10 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 pb-12 pt-6 md:pt-4 px-4 md:px-8">
-                  {categorySkills.map((skill, i) => (
-                    <ReferenceCard key={skill.id} skill={skill} index={i} />
+            <WallDiplomas />
+
+            {/* Bookshelves Grid Container */}
+            <div className="w-full max-w-[1200px] grid grid-cols-1 lg:grid-cols-2 gap-16 px-4 md:px-0">
+
+              {/* Technical Skills Shelf (Encyclopedias) */}
+              <div className="relative w-full flex flex-col justify-end">
+
+                <div className="relative z-10 flex items-end justify-center lg:justify-start flex-wrap gap-[2px] min-h-[250px] px-4 lg:px-8">
+                  {Object.entries(groupedTechSkills).map(([category, categorySkills], i) => (
+                    <React.Fragment key={category}>
+                      {i > 0 && i % 5 === 0 && <div className="w-8 shrink-0" />}
+                      <BookSpine
+                        title={category}
+                        type="category"
+                        index={i}
+                        skills={categorySkills}
+                        onClick={() => setActiveCategory({ title: category, skills: categorySkills })}
+                      />
+                    </React.Fragment>
+                  ))}
+                  {/* Dummy Filler Books */}
+                  {Array.from({ length: 2 }).map((_, i) => (
+                    <BookSpine
+                      key={`d-t-${i}`}
+                      title=""
+                      type="dummy"
+                      index={i + 15}
+                    />
                   ))}
                 </div>
 
-                {/* The Wooden Shelf Divider */}
-                <div className="absolute bottom-4 left-0 right-0 h-5 rounded-sm bg-gradient-to-b from-[#C8B8A6] to-[#A39180] dark:from-[#2A2631] dark:to-[#17151A] shadow-[0_12px_20px_rgba(0,0,0,0.15)] dark:shadow-[0_12px_25px_rgba(0,0,0,0.6)] border-t border-white/40 dark:border-white/5 z-0" />
-                <div className="absolute bottom-0 left-4 right-4 h-2 bg-black/10 dark:bg-black/50 blur-[3px] z-0" />
+                {/* The Physical Shelf Graphic */}
+                <div className="relative w-full h-10 rounded-sm bg-gradient-to-b from-[#2A231E] to-[#14100E] shadow-[0_20px_40px_rgba(0,0,0,0.3)] dark:shadow-[0_20px_40px_rgba(0,0,0,0.9)] border-t-2 border-[#4A3D34] z-0 flex items-center justify-center">
+                  <div className="absolute inset-x-0 bottom-0 h-4 bg-black/60 blur-[4px]" />
+
+                  {/* Silver Plaque */}
+                  <div className="relative z-10 px-6 py-1 bg-gradient-to-b from-[#E0E0E0] to-[#999999] shadow-[inset_0_1px_1px_rgba(255,255,255,0.5),_0_2px_4px_rgba(0,0,0,0.5)] rounded-sm border border-[#666666] flex items-center justify-center translate-y-0.5">
+                    <div className="absolute left-1 top-1/2 -translate-y-1/2 size-0.5 rounded-full bg-[#444444] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]" />
+                    <div className="absolute right-1 top-1/2 -translate-y-1/2 size-0.5 rounded-full bg-[#444444] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]" />
+                    <span className="font-serif text-[10px] md:text-xs font-bold tracking-[0.2em] text-[#1A1A1A] uppercase">
+                      Technical Skills
+                    </span>
+                  </div>
+                </div>
               </div>
-            ))}
+
+              {/* Professional Skills Shelf (Individual Books) */}
+              <div className="relative w-full flex flex-col justify-end">
+                <div className="relative z-10 flex items-end justify-center lg:justify-start flex-wrap gap-[2px] min-h-[250px] px-4 lg:px-8">
+                  {professionalSkills.map((skill, i) => (
+                    <React.Fragment key={skill.id}>
+                      {i > 0 && i % 5 === 0 && <div className="w-8 shrink-0" />}
+                      <BookSpine
+                        title={skill.name}
+                        type="individual"
+                        icon={skill.icon}
+                        index={i}
+                      />
+                    </React.Fragment>
+                  ))}
+                  {/* Dummy Filler Books */}
+                  {Array.from({ length: 2 }).map((_, i) => (
+                    <BookSpine
+                      key={`d-p-${i}`}
+                      title=""
+                      type="dummy"
+                      index={i + 30}
+                    />
+                  ))}
+                </div>
+
+                {/* The Physical Shelf Graphic */}
+                <div className="relative w-full h-10 rounded-sm bg-gradient-to-b from-[#2A231E] to-[#14100E] shadow-[0_20px_40px_rgba(0,0,0,0.3)] dark:shadow-[0_20px_40px_rgba(0,0,0,0.9)] border-t-2 border-[#4A3D34] z-0 flex items-center justify-center">
+                  <div className="absolute inset-x-0 bottom-0 h-4 bg-black/60 blur-[4px]" />
+
+                  {/* Silver Plaque */}
+                  <div className="relative z-10 px-6 py-1 bg-gradient-to-b from-[#E0E0E0] to-[#999999] shadow-[inset_0_1px_1px_rgba(255,255,255,0.5),_0_2px_4px_rgba(0,0,0,0.5)] rounded-sm border border-[#666666] flex items-center justify-center translate-y-0.5">
+                    <div className="absolute left-1 top-1/2 -translate-y-1/2 size-0.5 rounded-full bg-[#444444] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]" />
+                    <div className="absolute right-1 top-1/2 -translate-y-1/2 size-0.5 rounded-full bg-[#444444] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]" />
+                    <span className="font-serif text-[10px] md:text-xs font-bold tracking-[0.2em] text-[#1A1A1A] uppercase">
+                      Professional Skills
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
         )}
       </div>
+
+      {/* Mobile Modal for Categories */}
+      <AnimatePresence>
+        {activeCategory && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-black/50 backdrop-blur-sm cursor-pointer"
+              onClick={() => setActiveCategory(null)}
+            />
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative bg-[#F9F6F0] dark:bg-[#1A1816] w-full max-w-sm rounded-md p-6 shadow-2xl border border-black/10 dark:border-white/10"
+            >
+              <button
+                onClick={() => setActiveCategory(null)}
+                className="absolute top-4 right-4 p-2 text-charcoal/50 dark:text-white/50 hover:text-charcoal dark:hover:text-white transition-colors rounded-full hover:bg-black/5 dark:hover:bg-white/5"
+              >
+                <Icon icon="lucide:x" className="size-5" />
+              </button>
+
+              <h3 className="font-serif font-bold text-xl text-charcoal dark:text-white/90 border-b border-black/10 dark:border-white/10 pb-4 mb-5 flex items-center gap-2">
+                <Icon icon="lucide:library" className="size-5 text-[#8B5A2B] dark:text-[#C9A98E]" />
+                {activeCategory.title}
+              </h3>
+
+              <div className="grid grid-cols-2 gap-y-4 gap-x-4">
+                {activeCategory.skills.map(s => (
+                  <div key={s.id} className="flex items-center gap-2.5 overflow-hidden group/item">
+                    <div className="size-8 rounded bg-black/5 dark:bg-white/5 flex items-center justify-center shrink-0 group-hover/item:bg-[#8B5A2B]/10 dark:group-hover/item:bg-[#C9A98E]/10 transition-colors">
+                      <Icon icon={s.icon} className="size-4.5 text-charcoal/70 dark:text-white/70 group-hover/item:text-[#8B5A2B] dark:group-hover/item:text-[#C9A98E] transition-colors" />
+                    </div>
+                    <span className="font-sans text-sm font-medium text-charcoal/80 dark:text-white/80 truncate">
+                      {s.name}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </section>
   )
 }
