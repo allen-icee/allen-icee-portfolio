@@ -59,3 +59,49 @@ export interface LibraryItem {
   category: 'book' | 'article' | 'video' | 'tool'
   tags: string[]
 }
+
+export interface MockSkill {
+  id: string
+  name: string
+  category: string
+  yearsOfExperience: number
+  confidence: number
+  icon: string
+}
+
+export interface MockJournalEntry {
+  title: string
+  body: string
+  signature: string
+}
+
+export interface MockProject {
+  id: string
+  title: string
+  tagline: string
+  description: string
+  techStack: string[]
+  coverImage: string
+  githubLink: string
+}
+
+export interface MockArtwork {
+  id: string
+  title: string
+  imageURL: string
+  medium: string
+  story: string
+}
+
+
+
+export interface Certificate {
+  id: string
+  title: string
+  issuer: string
+  date: string
+  credentialId?: string
+  category?: string
+  verificationUrl?: string
+  image: string
+}

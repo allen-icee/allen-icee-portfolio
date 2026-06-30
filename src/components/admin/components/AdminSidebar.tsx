@@ -1,6 +1,7 @@
+// src/components/admin/components/AdminSidebar.tsx
 import { NavLink } from 'react-router-dom'
 import { Icon } from '@iconify/react'
-import { useAuth } from '../../hooks/useAuth'
+import { useAuth } from '../../../hooks/useAuth'
 
 const links = [
   { to: '/admin', label: 'Dashboard', icon: 'lucide:layout-dashboard' },

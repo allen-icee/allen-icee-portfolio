@@ -1,7 +1,8 @@
+// src/components/admin/components/AdminMediaManager.tsx
 import { useState, useRef, type DragEvent } from 'react'
 import { Icon } from '@iconify/react'
-import { compressImage } from '../../utils/compressImage'
-import { uploadImage, listImages, deleteImage, type StoredImage } from '../../services/storage'
+import { compressImage } from '../../../utils/compressImage'
+import { uploadImage, listImages, deleteImage, type StoredImage } from '../../../services/storage'
 
 interface UploadingFile {
   name: string
@@ -21,7 +22,7 @@ export default function AdminMediaManager() {
       const items = await listImages()
       setImages(items)
     } catch {
-      // storage not configured yet
+
     } finally {
       setLoading(false)
     }
@@ -42,7 +43,7 @@ export default function AdminMediaManager() {
           prev.map((u) => (u.name === file.name ? { ...u, progress: 50 } : u))
         )
 
-        const stored = await uploadImage(compressed.blob, compressed.fileName, (pct) => {
+        const stored = await uploadImage(compressed.blob, compressed.fileName, (pct: any) => {
           setUploading((prev) =>
             prev.map((u) => (u.name === file.name ? { ...u, progress: pct } : u))
           )
@@ -85,7 +86,7 @@ export default function AdminMediaManager() {
     try {
       await navigator.clipboard.writeText(url)
     } catch {
-      // fallback: select the text manually
+
     }
   }
 
@@ -93,7 +94,6 @@ export default function AdminMediaManager() {
     <div>
       <h1 className="mb-6 text-lg font-medium text-white">Media Manager</h1>
 
-      {/* Drop zone */}
       <div
         className={`mb-6 flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed p-10 transition-colors ${
           dragOver
@@ -118,7 +118,6 @@ export default function AdminMediaManager() {
         />
       </div>
 
-      {/* Uploading queue */}
       {uploading.length > 0 && (
         <div className="mb-6 space-y-2">
           {uploading.map((u) => (
@@ -137,7 +136,6 @@ export default function AdminMediaManager() {
         </div>
       )}
 
-      {/* Image grid */}
       {loading ? (
         <div className="flex items-center gap-3 py-12 text-sm text-white/40">
           <Icon icon="lucide:loader-circle" className="size-4 animate-spin" />

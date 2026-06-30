@@ -1,37 +1,9 @@
-export interface MockSkill {
-  id: string
-  name: string
-  category: string
-  yearsOfExperience: number
-  confidence: number
-  icon: string
-}
+import type { MockSkill, MockJournalEntry, MockProject, MockArtwork, Experience } from '../types'
 
-export interface MockJournalEntry {
-  title: string
-  body: string
-  signature: string
-}
 
-import type { Experience } from '../types'
 
-export interface MockProject {
-  id: string
-  title: string
-  tagline: string
-  description: string
-  techStack: string[]
-  coverImage: string
-  githubLink: string
-}
 
-export interface MockArtwork {
-  id: string
-  title: string
-  imageURL: string
-  medium: string
-  story: string
-}
+
 
 export const mockSkills: MockSkill[] = [
   // Frontend
@@ -223,4 +195,3 @@ export const mockExperiences: Experience[] = [
     updatedAt: Date.now(),
   }
 ]
-

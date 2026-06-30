@@ -1,13 +1,14 @@
+// src/pages/admin/AdminArtPage.tsx
 import { useState } from 'react'
 import { useCollection } from '../../hooks/useCollection'
-import AdminTable, { type Column } from '../../components/admin/AdminTable'
-import AdminFormModal from '../../components/admin/AdminFormModal'
+import AdminTable, { type Column } from '../../components/admin/components/AdminTable'
+import AdminFormModal from '../../components/admin/modals/AdminFormModal'
 import type { Artwork } from '../../types'
 
 const columns: Column<Artwork>[] = [
   { key: 'title', label: 'Title' },
   { key: 'medium', label: 'Medium' },
-  { key: 'updatedAt', label: 'Updated', render: (v) => new Date(v as number).toLocaleDateString() },
+  { key: 'updatedAt', label: 'Updated', render: (v: any) => new Date(v as number).toLocaleDateString() },
 ]
 
 const formFields = [
@@ -52,7 +53,7 @@ export default function AdminArtPage() {
         columns={columns}
         data={items}
         loading={loading}
-        onEdit={(item) => { setEditing(item); setShowForm(true) }}
+        onEdit={(item: any) => { setEditing(item); setShowForm(true) }}
         onDelete={handleDelete}
         onAdd={() => { setEditing(null); setShowForm(true) }}
       />

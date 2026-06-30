@@ -1,11 +1,11 @@
-import { useState, useRef, useMemo, useEffect } from 'react'
+// src/components/public/components/CompWanderingCat.tsx
+import { useState, useRef, useMemo, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence, useAnimationFrame, useMotionValue, useTransform, useMotionTemplate, animate } from 'framer-motion'
 
 const FRAME_SIZE = 64
 const IMAGE_WIDTH = 352 * 2
 const IMAGE_HEIGHT = 1696 * 2
 
-// 1. Expanded Type to include all new states
 type AnimState =
   | 'sit' | 'loaf'
   | 'restOpen' | 'restClose' | 'restCurl' | 'restSprawl'
@@ -19,23 +19,19 @@ interface AnimConfig {
   speedPx?: number
 }
 
-// 2. Mapped using the EXACT indices you provided (using Right-facing variations for scaleX compatibility)
 const ANIMATIONS: Record<AnimState, AnimConfig> = {
-  // Static Resting states (Using only the explicitly approved single frames)
+
   sit: { frames: [0], msPerFrame: 1000 },
   loaf: { frames: [22], msPerFrame: 1000 },
 
-  // Static single-frame rests (Right facing ones)
   restOpen: { frames: [34], msPerFrame: 1000 },
   restClose: { frames: [36], msPerFrame: 1000 },
   restCurl: { frames: [40], msPerFrame: 1000 },
   restSprawl: { frames: [42], msPerFrame: 1000 },
 
-  // Movement (Right facing)
   walk: { frames: [66, 67, 68, 69, 70, 71, 72, 73], msPerFrame: 100, speedPx: 40 },
   run: { frames: [66, 67, 68, 69, 70, 71, 72, 73], msPerFrame: 60, speedPx: 120 },
 
-  // Actions
   sleep: { frames: [187, 188], msPerFrame: 800 },
   eat: { frames: [253, 254, 255, 256, 257, 258, 259, 260], msPerFrame: 150 },
   meow: { frames: [308, 309, 310], msPerFrame: 200 },
@@ -47,18 +43,18 @@ const ANIMATIONS: Record<AnimState, AnimConfig> = {
 }
 
 const ACCESSORIES = [
-  null, // Default (no accessory)
-  '/cats/cat 1 16x16 animation cupid.png',
-  '/cats/cat 1 16x16 animation nimbus.png',
-  '/cats/cat 1 16x16 animation wings.png',
-  '/cats/cat 1 16x16 animation with blue bow 2.png',
-  '/cats/cat 1 16x16 animation with gold bow.png',
-  '/cats/cat 1 16x16 animation with gold glasses hearts.png',
-  '/cats/cat 1 16x16 animation with green bow 2.png',
-  '/cats/cat 1 16x16 animation with pink bow 2.png',
-  '/cats/cat 1 16x16 animation with pink bow.png',
-  '/cats/cat 1 16x16 animation with red bow.png',
-  '/cats/cat 1 16x16 animation with red glasses hearts.png'
+  null, 
+  '/assets/cats/cat 1 16x16 animation cupid.png',
+  '/assets/cats/cat 1 16x16 animation nimbus.png',
+  '/assets/cats/cat 1 16x16 animation wings.png',
+  '/assets/cats/cat 1 16x16 animation with blue bow 2.png',
+  '/assets/cats/cat 1 16x16 animation with gold bow.png',
+  '/assets/cats/cat 1 16x16 animation with gold glasses hearts.png',
+  '/assets/cats/cat 1 16x16 animation with green bow 2.png',
+  '/assets/cats/cat 1 16x16 animation with pink bow 2.png',
+  '/assets/cats/cat 1 16x16 animation with pink bow.png',
+  '/assets/cats/cat 1 16x16 animation with red bow.png',
+  '/assets/cats/cat 1 16x16 animation with red glasses hearts.png'
 ]
 
 interface CatConfig {
@@ -84,7 +80,6 @@ function SingleCat({ config }: { config: CatConfig }) {
   const [bubble, setBubble] = useState<string | null>(null)
   const [currentAccessory, setCurrentAccessory] = useState<string | null>(initialAccessory || null)
 
-  // -- High Performance Motion Values --
   const x = useMotionValue(initPixelX)
   const y = useMotionValue(0)
   const initialFrame = ANIMATIONS.sit.frames[0]
@@ -95,7 +90,6 @@ function SingleCat({ config }: { config: CatConfig }) {
   const zIndex = useTransform(x, (v) => Math.floor(v % 10) + 50)
   const bgPosition = useMotionTemplate`${bgX}px ${bgY}px`
 
-  // -- Game Engine State --
   const state = useRef<AnimState>('sit')
   const frameIndex = useRef(0)
   const timeSinceLastFrame = useRef(0)
@@ -104,14 +98,12 @@ function SingleCat({ config }: { config: CatConfig }) {
   const targetStateDuration = useRef(randomBetween(2000, 5000))
   const targetX = useRef(initPixelX)
 
-  // Interaction flags to pause AI
   const isDragging = useRef(false)
   const isHovering = useRef(false)
   const isFalling = useRef(false)
 
-  // Behaviors
-  const pickStationaryState = () => {
-    // 5% chance to change outfit randomly when picking a new state
+  const pickStationaryState = useCallback(() => {
+
     if (Math.random() < 0.05) {
       setCurrentAccessory(ACCESSORIES[Math.floor(Math.random() * ACCESSORIES.length)])
     }
@@ -119,7 +111,6 @@ function SingleCat({ config }: { config: CatConfig }) {
     const rand = Math.random()
     let next: AnimState = 'sit'
 
-    // 3. Spreading out all the new idle actions fairly
     if (rand < 0.1) next = 'sit'
     else if (rand < 0.2) next = 'loaf'
     else if (rand < 0.25) next = 'restOpen'
@@ -139,7 +130,6 @@ function SingleCat({ config }: { config: CatConfig }) {
     frameIndex.current = 0
     timeSinceLastFrame.current = 0
 
-    // Add fun dialogue for specific actions
     const dialogues: Partial<Record<AnimState, string[]>> = {
       sleep: ['Zzz...', 'purrrrrr...', 'snore', 'honk shoo...', '( -_・)', '(ᴗ_ ᴗ。)'],
       meow: ['Meow!', 'Mew', 'Nya!', 'Mrrrp?', 'Bleh', 'Nyenye', 'Lablab Mr.Alien ♥', '(=^･ω･^=)', '(≧◡≦)', 'Lablab Ms.Dino ♥', 'Mr.Alien is bad', 'Cute ni Ms.Dino!'],
@@ -158,7 +148,7 @@ function SingleCat({ config }: { config: CatConfig }) {
     } else {
       setBubble(null)
     }
-  }
+  }, [name])
 
   const pickMovingState = () => {
     setBubble(null)
@@ -189,7 +179,6 @@ function SingleCat({ config }: { config: CatConfig }) {
     }
   }
 
-  // 4. Enhanced Click Handler (50/50 chance to Hiss or Paw Attack)
   const handleCatClick = () => {
     if (isDragging.current) return
 
@@ -209,19 +198,14 @@ function SingleCat({ config }: { config: CatConfig }) {
     timeInCurrentState.current = 0
     targetStateDuration.current = 1500
   }
-
-  // Initial spawn
   useEffect(() => {
     pickStationaryState()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [pickStationaryState])
 
-  // -- The Game Loop --
   useAnimationFrame((_, delta) => {
     const safeDelta = Math.min(delta, 100)
     const currentAnim = ANIMATIONS[state.current]
 
-    // 1. Sprite Animation Update
     timeSinceLastFrame.current += safeDelta
     if (timeSinceLastFrame.current >= currentAnim.msPerFrame) {
       timeSinceLastFrame.current = 0
@@ -231,17 +215,14 @@ function SingleCat({ config }: { config: CatConfig }) {
       const col = absFrame % 11
       const row = Math.floor(absFrame / 11)
 
-      // Update sprite CSS properties
       bgX.set(-(col * FRAME_SIZE))
       bgY.set(-(row * FRAME_SIZE))
     }
 
-    // AI logic is paused while dragging, hovering, or falling
     if (isDragging.current || isHovering.current || isFalling.current) return
 
-    // 2. Logic Update
     if (state.current === 'walk' || state.current === 'run') {
-      // Movement Phase
+
       const speed = currentAnim.speedPx || 40
       const moveDelta = speed * (safeDelta / 1000)
       const currentX = x.get()
@@ -255,7 +236,7 @@ function SingleCat({ config }: { config: CatConfig }) {
         x.set(currentX + moveDelta * dir)
       }
     } else {
-      // Idle Phase
+
       timeInCurrentState.current += safeDelta
       if (timeInCurrentState.current >= targetStateDuration.current) {
         pickNextAction()
@@ -277,7 +258,7 @@ function SingleCat({ config }: { config: CatConfig }) {
       onDragEnd={() => {
         isDragging.current = false
         isFalling.current = true
-        state.current = 'run' // Flailing legs while falling!
+        state.current = 'run' 
         setBubble(`${name}: Ahhh!`)
 
         animate(y, 0, {
@@ -357,9 +338,9 @@ function SingleCat({ config }: { config: CatConfig }) {
 }
 
 const CAT_DATA: CatConfig[] = [
-  { id: 'milktea', name: 'MILKTEA', spriteUrl: '/cats/cat 1.png', accessoryUrl: '/cats/cat 1 16x16 animation with gold glasses hearts.png', startXRatio: 0.2 },
-  { id: 'kyatkyat', name: 'KYATKYAT', spriteUrl: '/cats/cat 1.6.png', accessoryUrl: '/cats/cat 1 16x16 animation with red bow.png', startXRatio: 0.5 },
-  { id: 'macee', name: 'ALLEN ICEE', spriteUrl: '/cats/cat 1.9.png', accessoryUrl: '/cats/cat 1 16x16 animation cupid.png', startXRatio: 0.8 },
+  { id: 'milktea', name: 'MILKTEA', spriteUrl: '/assets/cats/cat 1.png', accessoryUrl: '/assets/cats/cat 1 16x16 animation with gold glasses hearts.png', startXRatio: 0.2 },
+  { id: 'kyatkyat', name: 'KYATKYAT', spriteUrl: '/assets/cats/cat 1.6.png', accessoryUrl: '/assets/cats/cat 1 16x16 animation with red bow.png', startXRatio: 0.5 },
+  { id: 'macee', name: 'ALLEN ICEE', spriteUrl: '/assets/cats/cat 1.9.png', accessoryUrl: '/assets/cats/cat 1 16x16 animation cupid.png', startXRatio: 0.8 },
 ]
 
 export default function CompWanderingCat() {

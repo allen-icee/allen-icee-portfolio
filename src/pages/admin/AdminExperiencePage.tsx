@@ -1,13 +1,14 @@
+// src/pages/admin/AdminExperiencePage.tsx
 import { useState } from 'react'
 import { useCollection } from '../../hooks/useCollection'
-import AdminTable, { type Column } from '../../components/admin/AdminTable'
-import AdminFormModal from '../../components/admin/AdminFormModal'
+import AdminTable, { type Column } from '../../components/admin/components/AdminTable'
+import AdminFormModal from '../../components/admin/modals/AdminFormModal'
 import type { Experience } from '../../types'
 
 const columns: Column<Experience>[] = [
   { key: 'role', label: 'Role' },
   { key: 'company', label: 'Company' },
-  { key: 'timeline', label: 'Period', render: (v) => {
+  { key: 'timeline', label: 'Period', render: (v: any) => {
     const t = v as { start: string; end?: string }
     return `${t.start} – ${t.end ?? 'Present'}`
   }},
@@ -63,7 +64,7 @@ export default function AdminExperiencePage() {
         columns={columns}
         data={items}
         loading={loading}
-        onEdit={(item) => { setEditing(item); setShowForm(true) }}
+        onEdit={(item: any) => { setEditing(item); setShowForm(true) }}
         onDelete={handleDelete}
         onAdd={() => { setEditing(null); setShowForm(true) }}
       />

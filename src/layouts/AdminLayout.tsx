@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import { Icon } from '@iconify/react'
-import AdminSidebar from '../components/admin/AdminSidebar'
+import AdminSidebar from '../components/admin/components/AdminSidebar'
 
 export default function AdminLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)

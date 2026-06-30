@@ -2,9 +2,9 @@ import { Outlet, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useSmoothScroll } from '../hooks/useSmoothScroll'
 import { Navbar } from '../components/navigation/Navbar'
-import PublicSecretTrigger from '../components/public/PublicSecretTrigger'
-import CompEnvironment from '../components/public/CompEnvironment'
-import CompWanderingCat from '../components/public/CompWanderingCat'
+
+import CompEnvironment from '../components/public/components/CompEnvironment'
+import CompWanderingCat from '../components/public/components/CompWanderingCat'
 
 const publicPageVariants = {
   initial: { opacity: 0, y: 12 },
@@ -21,7 +21,7 @@ export default function PublicLayout() {
       <CompEnvironment />
       <CompWanderingCat />
       <Navbar />
-      <PublicSecretTrigger />
+      
       <AnimatePresence mode="wait">
         <motion.main
           key={location.pathname}

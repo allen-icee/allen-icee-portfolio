@@ -1,3 +1,4 @@
+// src/components/ui/CompButton.tsx
 import { type ButtonHTMLAttributes, type ReactNode } from 'react'
 
 interface CompButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -6,7 +7,6 @@ interface CompButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export default function CompButton({
-  variant = 'primary',
   children,
   ...props
 }: CompButtonProps) {

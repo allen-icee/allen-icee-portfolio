@@ -1,3 +1,4 @@
+// src/pages/admin/AdminDashboard.tsx
 import { useAuth } from '../../hooks/useAuth'
 
 export default function AdminDashboard() {

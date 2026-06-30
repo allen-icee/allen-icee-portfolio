@@ -1,6 +1,7 @@
+// src/components/public/components/CompEnvironment.tsx
 import { useContext, useMemo } from 'react'
 import { motion } from 'framer-motion'
-import { ThemeContext } from '../../context/ThemeContext'
+import { ThemeContext } from '../../../context/ThemeContext'
 
 interface Particle {
   id: number
@@ -39,7 +40,7 @@ export default function CompEnvironment() {
       className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
       aria-hidden
     >
-      {/* Lavender petals */}
+
       {petals.map((p) => (
         <motion.div
           key={`petal-${p.id}`}
@@ -73,7 +74,6 @@ export default function CompEnvironment() {
         </motion.div>
       ))}
 
-      {/* Stars / fireflies — more prominent in dark mode */}
       {stars.map((p) => (
         <motion.div
           key={`star-${p.id}`}

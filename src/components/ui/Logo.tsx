@@ -1,3 +1,4 @@
+// src/components/ui/Logo.tsx
 export function Logo({ className = '' }: { className?: string }) {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width="655" height="835" fill="none" viewBox="0 0 655 835" className={className}>

@@ -40,6 +40,26 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     transition: background-color 0.3s ease, color 0.3s ease;
+    
+    /* Subtle Purple Dot Grid */
+    background-image: radial-gradient(rgba(107, 76, 154, 0.08) 1.5px, transparent 1.5px);
+    background-size: 24px 24px;
+    background-position: 0 0, 12px 12px;
+  }
+
+  .dark body {
+    background-image: radial-gradient(rgba(230, 230, 250, 0.05) 1.5px, transparent 1.5px);
+  }
+
+  /* Custom Intersecting Dot Grid for specific sections */
+  .section-pattern-dots {
+    background-image: radial-gradient(rgba(107, 76, 154, 0.06) 1.5px, transparent 1.5px), radial-gradient(rgba(107, 76, 154, 0.06) 1.5px, transparent 1.5px) !important;
+    background-size: 20px 20px !important;
+    background-position: 0 0, 10px 10px !important;
+  }
+
+  .dark .section-pattern-dots {
+    background-image: radial-gradient(rgba(230, 230, 250, 0.04) 1.5px, transparent 1.5px), radial-gradient(rgba(230, 230, 250, 0.04) 1.5px, transparent 1.5px) !important;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -184,6 +204,4 @@
   animation: galleryMarquee 80s linear infinite;
 }
 
-.animate-gallery-marquee:hover {
-  animation-play-state: paused;
-}
+

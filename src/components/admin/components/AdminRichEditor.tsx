@@ -1,3 +1,4 @@
+// src/components/admin/components/AdminRichEditor.tsx
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Placeholder from '@tiptap/extension-placeholder'
@@ -28,7 +29,7 @@ export default function AdminRichEditor({ content, onChange, placeholder }: Admi
 
   return (
     <div className="overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.04]">
-      {/* Toolbar */}
+
       <div className="flex flex-wrap items-center gap-0.5 border-b border-white/[0.06] px-3 py-2">
         <button
           type="button"
@@ -97,7 +98,6 @@ export default function AdminRichEditor({ content, onChange, placeholder }: Admi
         </button>
       </div>
 
-      {/* Editor area */}
       <div className="prose prose-invert prose-sm max-w-none px-4 py-3 text-white/70 [&_.ProseMirror-prompt]:text-white/30 [&_.ProseMirror]:min-h-[200px] [&_.ProseMirror]:outline-none [&_p.is-editor-empty:first-child::before]:text-white/20">
         <EditorContent editor={editor} />
       </div>

@@ -1,13 +1,14 @@
+// src/pages/admin/AdminSkillsPage.tsx
 import { useState } from 'react'
 import { useCollection } from '../../hooks/useCollection'
-import AdminTable, { type Column } from '../../components/admin/AdminTable'
-import AdminFormModal from '../../components/admin/AdminFormModal'
+import AdminTable, { type Column } from '../../components/admin/components/AdminTable'
+import AdminFormModal from '../../components/admin/modals/AdminFormModal'
 import type { Skill } from '../../types'
 
 const columns: Column<Skill>[] = [
   { key: 'name', label: 'Name' },
   { key: 'category', label: 'Category' },
-  { key: 'confidence', label: 'Confidence', render: (v) => `${v}%` },
+  { key: 'confidence', label: 'Confidence', render: (v: any) => `${v}%` },
   { key: 'yearsOfExperience', label: 'Years' },
 ]
 
@@ -55,7 +56,7 @@ export default function AdminSkillsPage() {
         columns={columns}
         data={items}
         loading={loading}
-        onEdit={(item) => { setEditing(item); setShowForm(true) }}
+        onEdit={(item: any) => { setEditing(item); setShowForm(true) }}
         onDelete={handleDelete}
         onAdd={() => { setEditing(null); setShowForm(true) }}
       />

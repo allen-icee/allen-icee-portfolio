@@ -1,3 +1,4 @@
+// src/components/public/desk/KeeperRecord.tsx
 import { motion } from 'framer-motion'
 
 export function KeeperRecord() {
@@ -7,10 +8,9 @@ export function KeeperRecord() {
       whileHover={{ y: -5, scale: 1.02, rotateZ: 1, boxShadow: '4px 8px 20px rgba(0,0,0,0.2)' }}
       transition={{ duration: 0.3, ease: 'easeOut' }}
     >
-      {/* Decorative inner border */}
+
       <div className="absolute inset-1.5 rounded-md border border-[#C8B8A6]/60 dark:border-[#8c6b5d]/30 pointer-events-none" />
 
-      {/* Stamped Header */}
       <div className="mb-4 flex items-center justify-between border-b border-[#C8B8A6]/80 pb-2 dark:border-[#8c6b5d]/40">
         <span className="font-sans text-[10px] font-bold tracking-[0.2em] uppercase text-[#8B5A2B]/80 dark:text-[#5C3A21]/80">
           Record No. 2846
@@ -30,7 +30,7 @@ export function KeeperRecord() {
           <span className="font-semibold">Ice</span>
         </div>
         <div className="flex justify-between border-b border-[#C8B8A6]/30 pb-1 border-dashed">
-          <span className="opacity-70">Role</span>
+          <span className="opacity-70">Race</span>
           <span className="font-semibold">Alien</span>
         </div>
         <div className="flex justify-between border-b border-[#C8B8A6]/30 pb-1 border-dashed">
@@ -38,16 +38,19 @@ export function KeeperRecord() {
           <span className="font-semibold">He/Him</span>
         </div>
         <div className="flex justify-between border-b border-[#C8B8A6]/30 pb-1 border-dashed">
+          <span className="opacity-70">Nationality</span>
+          <span className="font-semibold">Filipino</span>
+        </div>
+        <div className="flex justify-between border-b border-[#C8B8A6]/30 pb-1 border-dashed">
+          <span className="opacity-70">Languages</span>
+          <span className="font-semibold">English, Tagalog</span>
+        </div>
+        <div className="flex justify-between border-b border-[#C8B8A6]/30 pb-1 border-dashed">
           <span className="opacity-70">Social Level</span>
           <span className="font-semibold">Battery Saving Mode</span>
         </div>
-        <div className="flex justify-between border-b border-[#C8B8A6]/30 pb-1 border-dashed">
-          <span className="opacity-70">Current Status</span>
-          <span className="font-semibold">Borderline Crazy</span>
-        </div>
       </div>
 
-      {/* Wax seal SVG */}
       <div className="absolute -bottom-6 -right-6 flex size-14 items-center justify-center pointer-events-none z-10">
         <img src="/svg/other/melted-wax.svg" alt="Wax Seal" className="w-full h-full object-contain filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.5)] dark:drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)]" />
       </div>

@@ -1,3 +1,4 @@
+// src/components/ui/UIModal.tsx
 import { useEffect, type ReactNode } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Icon } from '@iconify/react'

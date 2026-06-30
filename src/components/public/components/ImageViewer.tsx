@@ -1,3 +1,4 @@
+// src/components/public/components/ImageViewer.tsx
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Icon } from "@iconify/react";
 
@@ -18,7 +19,7 @@ export default function ImageViewer({ images, initialIndex = 0, altText = "Image
   const [scale, setScale] = useState(MIN_ZOOM);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
-  
+
   const containerRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
   const pointers = useRef(new Map<number, { x: number; y: number }>());
@@ -40,38 +41,13 @@ export default function ImageViewer({ images, initialIndex = 0, altText = "Image
     resetZoom();
   }, [images.length, resetZoom]);
 
-  useEffect(() => {
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        onClose();
-      } else if (event.key === "+" || event.key === "=") {
-        handleZoom(0.5);
-      } else if (event.key === "-") {
-        handleZoom(-0.5);
-      } else if (event.key === "ArrowRight") {
-        goToNext();
-      } else if (event.key === "ArrowLeft") {
-        goToPrev();
-      }
-    }
-    
-    document.addEventListener("keydown", handleKeyDown);
-    document.body.style.overflow = "hidden"; 
-    
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "";
-    };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [onClose, goToNext, goToPrev]);
-
   const clampZoom = (value: number) => {
     return Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, Number(value.toFixed(2))));
   };
 
   const clampPosition = useCallback((x: number, y: number, currentScale: number) => {
     if (!containerRef.current || !imageRef.current) return { x, y };
-    
+
     const imgWidth = imageRef.current.offsetWidth;
     const imgHeight = imageRef.current.offsetHeight;
     const containerWidth = containerRef.current.offsetWidth;
@@ -99,8 +75,35 @@ export default function ImageViewer({ images, initialIndex = 0, altText = "Image
       }
       return newScale;
     });
-   
+
   }, [clampPosition]);
+
+  useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        onClose();
+      } else if (event.key === "+" || event.key === "=") {
+        handleZoom(0.5);
+      } else if (event.key === "-") {
+        handleZoom(-0.5);
+      } else if (event.key === "ArrowRight") {
+        goToNext();
+      } else if (event.key === "ArrowLeft") {
+        goToPrev();
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+    document.body.style.overflow = "hidden"; 
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "";
+    };
+
+  }, [onClose, goToNext, goToPrev, handleZoom]);
+
+
 
   const handleWheel = (event: React.WheelEvent<HTMLDivElement>) => {
     const delta = event.deltaY < 0 ? -0.2 : 0.2;
@@ -116,10 +119,10 @@ export default function ImageViewer({ images, initialIndex = 0, altText = "Image
 
   const handlePointerDown = (event: React.PointerEvent<HTMLImageElement>) => {
     if (event.button !== 0 && event.pointerType === "mouse") return;
-    
+
     event.currentTarget.setPointerCapture(event.pointerId);
     pointers.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
-    
+
     if (pointers.current.size === 1) {
       lastPanPoint.current = { x: event.clientX, y: event.clientY };
       if (scale > MIN_ZOOM) setIsDragging(true);
@@ -131,7 +134,7 @@ export default function ImageViewer({ images, initialIndex = 0, altText = "Image
 
   const handlePointerMove = (event: React.PointerEvent<HTMLImageElement>) => {
     if (!pointers.current.has(event.pointerId)) return;
-    
+
     pointers.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
 
     if (pointers.current.size === 2 && lastPinchDistance.current !== null) {
@@ -144,7 +147,7 @@ export default function ImageViewer({ images, initialIndex = 0, altText = "Image
     } else if (isDragging && lastPanPoint.current) {
       const deltaX = event.clientX - lastPanPoint.current.x;
       const deltaY = event.clientY - lastPanPoint.current.y;
-      
+
       setPosition(prev => clampPosition(prev.x + deltaX, prev.y + deltaY, scale));
       lastPanPoint.current = { x: event.clientX, y: event.clientY };
     }
@@ -153,7 +156,7 @@ export default function ImageViewer({ images, initialIndex = 0, altText = "Image
   const handlePointerEnd = (event: React.PointerEvent<HTMLImageElement>) => {
     event.currentTarget.releasePointerCapture(event.pointerId);
     pointers.current.delete(event.pointerId);
-    
+
     if (pointers.current.size === 0) {
       setIsDragging(false);
       lastPanPoint.current = null;
@@ -219,7 +222,7 @@ export default function ImageViewer({ images, initialIndex = 0, altText = "Image
           >
             <Icon icon="mdi:chevron-left" className="size-8" />
           </button>
-          
+
           <button
             type="button"
             onClick={(e) => {
@@ -289,8 +292,7 @@ export default function ImageViewer({ images, initialIndex = 0, altText = "Image
         </div>
       )}
       </div>
-      
-      {/* Side Panel Area */}
+
       {renderSidePanel && (
         <div className="w-full lg:w-[360px] xl:w-[420px] shrink-0 bg-[#0A0A0A]/95 backdrop-blur-2xl border-t lg:border-t-0 lg:border-l border-white/10 flex flex-col max-h-[50vh] lg:max-h-full overflow-y-auto z-[120] shadow-[-10px_0_40px_rgba(0,0,0,0.8)] relative">
           {renderSidePanel(currentIndex)}

@@ -1,3 +1,4 @@
+// src/components/public/modals/MessageModal.tsx
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Icon } from '@iconify/react'
@@ -14,11 +15,10 @@ export default function MessageModal({ isOpen, onClose }: MessageModalProps) {
     subject: '',
     message: ''
   })
-  
+
   const [isSending, setIsSending] = useState(false)
   const [isSent, setIsSent] = useState(false)
 
-  // Prevent scrolling when modal is open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden'
@@ -30,7 +30,6 @@ export default function MessageModal({ isOpen, onClose }: MessageModalProps) {
     }
   }, [isOpen])
 
-  // Reset form when closed
   useEffect(() => {
     if (!isOpen) {
       setTimeout(() => {
@@ -43,7 +42,7 @@ export default function MessageModal({ isOpen, onClose }: MessageModalProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     setIsSending(true)
-    // Simulate sending
+
     setTimeout(() => {
       setIsSending(false)
       setIsSent(true)
@@ -64,7 +63,7 @@ export default function MessageModal({ isOpen, onClose }: MessageModalProps) {
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center px-4 py-8">
-          {/* Backdrop */}
+
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -73,14 +72,13 @@ export default function MessageModal({ isOpen, onClose }: MessageModalProps) {
             className="absolute inset-0 bg-[#0F0D12]/80 backdrop-blur-md"
           />
 
-          {/* Modal Container */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
             className="relative w-full max-w-lg overflow-hidden rounded-md bg-[#FDFBF7] dark:bg-[#1A181C] shadow-[0_20px_50px_rgba(0,0,0,0.3)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.8)] border border-charcoal/10 dark:border-white/10"
           >
-            {/* Museum/Archive Header */}
+
             <div className="flex items-center justify-between border-b border-charcoal/10 dark:border-white/10 bg-[#EAE5D9]/50 dark:bg-white/5 px-6 py-4">
               <div className="flex items-center gap-3">
                 <Icon icon="lucide:mail-plus" className="size-5 text-charcoal/60 dark:text-white/60" />

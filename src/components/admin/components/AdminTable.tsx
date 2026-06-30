@@ -1,3 +1,4 @@
+// src/components/admin/components/AdminTable.tsx
 import { useState, type ReactNode } from 'react'
 import { Icon } from '@iconify/react'
 

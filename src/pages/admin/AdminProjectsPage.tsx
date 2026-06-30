@@ -1,14 +1,15 @@
+// src/pages/admin/AdminProjectsPage.tsx
 import { useState } from 'react'
 import { useCollection } from '../../hooks/useCollection'
-import AdminTable, { type Column } from '../../components/admin/AdminTable'
-import AdminFormModal from '../../components/admin/AdminFormModal'
+import AdminTable, { type Column } from '../../components/admin/components/AdminTable'
+import AdminFormModal from '../../components/admin/modals/AdminFormModal'
 import type { Project } from '../../types'
 
 const columns: Column<Project>[] = [
   { key: 'title', label: 'Title' },
-  { key: 'tagline', label: 'Tagline', render: (v) => String(v).slice(0, 50) + (String(v).length > 50 ? '…' : '') },
-  { key: 'isFeatured', label: 'Featured', render: (v) => (v ? '⭐' : '—') },
-  { key: 'updatedAt', label: 'Updated', render: (v) => new Date(v as number).toLocaleDateString() },
+  { key: 'tagline', label: 'Tagline', render: (v: any) => String(v).slice(0, 50) + (String(v).length > 50 ? '…' : '') },
+  { key: 'isFeatured', label: 'Featured', render: (v: any) => (v ? '⭐' : '—') },
+  { key: 'updatedAt', label: 'Updated', render: (v: any) => new Date(v as number).toLocaleDateString() },
 ]
 
 const formFields = [
@@ -67,7 +68,7 @@ export default function AdminProjectsPage() {
         columns={columns}
         data={items}
         loading={loading}
-        onEdit={(item) => { setEditing(item); setShowForm(true) }}
+        onEdit={(item: any) => { setEditing(item); setShowForm(true) }}
         onDelete={handleDelete}
         onAdd={() => { setEditing(null); setShowForm(true) }}
       />

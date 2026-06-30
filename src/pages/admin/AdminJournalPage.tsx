@@ -1,9 +1,10 @@
+// src/pages/admin/AdminJournalPage.tsx
 import { useState, useEffect } from 'react'
 import { doc, getDoc, setDoc } from 'firebase/firestore'
 import { Icon } from '@iconify/react'
 import { db } from '../../services/firebaseConfig'
-import { mockJournal } from '../../utils/mockData'
-import AdminRichEditor from '../../components/admin/AdminRichEditor'
+import { mockJournal } from '../../data/portfolioData'
+import AdminRichEditor from '../../components/admin/components/AdminRichEditor'
 
 const JOURNAL_DOC = 'settings'
 const JOURNAL_ID = 'journal'
@@ -30,7 +31,7 @@ export default function AdminJournalPage() {
           setBody(data.body ?? '')
           setSignature(data.signature ?? '')
         } else {
-          // ponytail: fall back to mock data when Firestore isn't seeded
+
           setTitle(mockJournal.title)
           setBody(mockJournal.body)
           setSignature(mockJournal.signature)
@@ -78,7 +79,7 @@ export default function AdminJournalPage() {
       <h1 className="mb-6 text-lg font-medium text-white">The Open Journal</h1>
 
       <div className="space-y-5">
-        {/* Title */}
+
         <div className="flex flex-col gap-1.5">
           <label className="text-xs font-medium text-white/50">Title</label>
           <input
@@ -88,7 +89,6 @@ export default function AdminJournalPage() {
           />
         </div>
 
-        {/* Body — rich text */}
         <div className="flex flex-col gap-1.5">
           <label className="text-xs font-medium text-white/50">Body</label>
           <AdminRichEditor
@@ -98,7 +98,6 @@ export default function AdminJournalPage() {
           />
         </div>
 
-        {/* Signature */}
         <div className="flex flex-col gap-1.5">
           <label className="text-xs font-medium text-white/50">Signature</label>
           <input
@@ -108,7 +107,6 @@ export default function AdminJournalPage() {
           />
         </div>
 
-        {/* Actions */}
         <div className="flex items-center gap-3 pt-2">
           <button
             onClick={handleSave}

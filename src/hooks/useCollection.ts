@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { getAll, create, update, remove } from '../services/db'
-import { mockProjects, mockSkills, mockArtworks } from '../utils/mockData'
+import { mockProjects, mockSkills, mockArtworks } from '../data/portfolioData'
 
 // ponytail: Firestore-first with mock fallback. Replace mockMaps with real data
 // once Firebase env vars are configured and collections are seeded.

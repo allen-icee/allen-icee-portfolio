@@ -1,8 +1,10 @@
+// src/components/public/sections/PublicHero.tsx
 import { useCallback, useEffect, useState } from 'react'
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { Icon } from '@iconify/react'
 import type Lenis from 'lenis'
-import { Logo } from '../ui/Logo'
+import { Logo } from '../../ui/Logo'
+import { Fireflies, FloatingPetal } from '../../ui/Particles'
 
 function scrollToSection(id: string) {
   const target = document.getElementById(id)
@@ -43,67 +45,25 @@ function FloatingMusicNote({ icon = "lucide:music", className, duration = 12, de
   )
 }
 
-function FloatingPetal({ className, petalIndex = 1, duration = 10, delay = 0 }: { className?: string, petalIndex?: number, duration?: number, delay?: number }) {
-  return (
-    <motion.img
-      src={`/svg/petals/petal-${petalIndex}.svg`}
-      className={`absolute drop-shadow-[0_0_8px_rgba(107,76,154,0.3)] dark:drop-shadow-[0_0_8px_rgba(230,230,250,0.3)] object-contain ${className}`}
-      animate={{ y: [-30, 30, -30], x: [-15, 15, -15], rotateZ: [0, 180, 360] }}
-      transition={{ duration, delay, repeat: Infinity, ease: 'linear' }}
-    />
-  )
-}
-
-function Fireflies() {
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none mix-blend-screen opacity-80 z-[1]">
-      {[...Array(30)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute rounded-full bg-[#FFF59D] shadow-[0_0_8px_rgba(255,245,157,0.8)]"
-          style={{
-            width: Math.random() * 4 + 2 + 'px',
-            height: Math.random() * 4 + 2 + 'px',
-            left: Math.random() * 100 + '%',
-            top: Math.random() * 100 + '%',
-          }}
-          animate={{
-            y: [0, -Math.random() * 100 - 50, 0],
-            x: [0, Math.random() * 50 - 25, 0],
-            opacity: [0, Math.random() * 0.8 + 0.2, 0],
-          }}
-          transition={{
-            duration: Math.random() * 10 + 10,
-            repeat: Infinity,
-            ease: 'easeInOut',
-            delay: Math.random() * 10,
-          }}
-        />
-      ))}
-    </div>
-  )
-}
-
 function FloatingOrigami({ className }: { className?: string }) {
   const [pos, setPos] = useState({
     x: -20, y: 20, rotateZ: 25, scaleX: 1, duration: 0, direction: 1
   });
 
   useEffect(() => {
-    // Initial random position off screen left
+
     setPos({ x: -20, y: 20, rotateZ: 25, scaleX: 1, duration: 0, direction: 1 });
 
     const moveBird = () => {
       setPos(prev => {
-        let isIdle = Math.random() > 0.6; // 40% chance to idle
+        let isIdle = Math.random() > 0.6; 
 
-        // If bird is off-screen, don't idle! Keep it moving so it comes back.
         if (prev.x < -10 || prev.x > 110) {
           isIdle = false;
         }
 
         if (isIdle) {
-          // Idle in place with slight bobbing
+
           return {
             ...prev,
             x: prev.x + (Math.random() * 4 - 2),
@@ -113,7 +73,6 @@ function FloatingOrigami({ className }: { className?: string }) {
         } else {
           let newDirection = prev.direction;
 
-          // Check if we need to turn around (because we flew entirely off screen)
           if (prev.direction === 1 && prev.x > 110) {
             newDirection = -1;
           } else if (prev.direction === -1 && prev.x < -10) {
@@ -123,16 +82,16 @@ function FloatingOrigami({ className }: { className?: string }) {
           let newX;
 
           if (newDirection === 1) {
-            // Flying right
+
             newX = prev.x + 20 + Math.random() * 40;
             if (newX > 120) newX = 120;
           } else {
-            // Flying left
+
             newX = prev.x - (20 + Math.random() * 40);
             if (newX < -20) newX = -20;
           }
 
-          let dyBase = (Math.random() - 0.5) * 30; // Max 15vh up or down
+          let dyBase = (Math.random() - 0.5) * 30; 
           let newY = prev.y + dyBase;
           if (newY < 5) newY = 5;
           if (newY > 75) newY = 75;
@@ -140,27 +99,19 @@ function FloatingOrigami({ className }: { className?: string }) {
           const dx = newX - prev.x;
           const dy = newY - prev.y;
 
-          // --- THE MATH FIX ---
-          // 1. Calculate Pitch: Treat all flights as if they are going Right. 
-          // Math.abs(dx) forces the math into the right hemisphere to find pure up/down pitch.
           let pitch = (Math.atan2(dy, Math.abs(dx)) * 180) / Math.PI;
 
-          // 2. Clamp the pitch so the origami doesn't dive-bomb or climb straight up
           if (pitch > 30) pitch = 30;
           if (pitch < -30) pitch = -30;
 
-          // 3. Apply the correct rotation formula based on direction
           let rotateZ;
           if (newDirection === 1) {
-            // Flying Right: Native image faces NE (-45°). 
-            // Adding 45 zeroes it to flat Right (0°), then we add our pitch.
+
             rotateZ = pitch + 45;
           } else {
-            // Flying Left: scaleX(-1) flips the native NE image to face NW (-135°).
-            // To pitch up or down while flipped, the geometry simplifies to this exact formula:
+
             rotateZ = -45 - pitch;
           }
-          // --------------------
 
           const dist = Math.sqrt(dx * dx + dy * dy);
           let duration = dist / 4;
@@ -227,7 +178,7 @@ export default function PublicHero() {
 
         if (data && data.quote) {
           const textLower = data.quote.toLowerCase()
-          // Check for any filtered words
+
           const hasFilteredWord = BAD_WORDS.some(word => textLower.includes(word))
 
           if (!hasFilteredWord) {
@@ -246,12 +197,10 @@ export default function PublicHero() {
     }
   }, [])
 
-  // Initial fetch
   useEffect(() => {
     fetchQuote()
   }, [fetchQuote])
 
-  // Typewriter effect
   useEffect(() => {
     if (!quote) return
     setIsTyping(true)
@@ -265,12 +214,11 @@ export default function PublicHero() {
         clearInterval(interval)
         setIsTyping(false)
       }
-    }, 40) // 40ms per char feels very natural
+    }, 40) 
 
     return () => clearInterval(interval)
   }, [quote])
 
-  // Fetch new quote 10s after typing finishes
   useEffect(() => {
     if (isTyping || !quote) return
     const timer = setTimeout(() => {
@@ -295,12 +243,9 @@ export default function PublicHero() {
     return () => window.removeEventListener('mousemove', handleMouseMove)
   }, [mouseX, mouseY])
 
-
-
   return (
-    <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden text-charcoal dark:text-white paper-overlay transition-colors duration-500">
+    <section id="home" className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden text-charcoal dark:text-white paper-overlay transition-colors duration-500">
 
-      {/* Logo Watermark */}
       <div className="absolute inset-0 m-auto flex items-center justify-center pointer-events-none opacity-[0.03] dark:opacity-[0.05] mix-blend-multiply dark:mix-blend-screen text-charcoal dark:text-lavender">
         <Logo className="w-[40vw] max-w-[400px] h-auto" />
       </div>
@@ -314,13 +259,11 @@ export default function PublicHero() {
         <div className="absolute size-[500px] rounded-full bg-[#8c6b5d]/10 blur-[100px] mix-blend-multiply dark:mix-blend-screen" />
       </div>
 
-      {/* Layer 1: Distant Background */}
       <ParallaxLayer xProgress={xProgress} yProgress={yProgress} depth={0.05}>
         <FloatingMusicNote icon="mdi:music-clef-treble" className="absolute bottom-[30%] left-[20%] size-10 blur-[1px]" duration={10} delay={1} />
         <FloatingMusicNote icon="mdi:music-note-sixteenth" className="absolute top-[25%] left-[15%] size-8 blur-[2px] opacity-50" duration={14} delay={3} />
       </ParallaxLayer>
 
-      {/* Layer 2: Midground */}
       <ParallaxLayer xProgress={xProgress} yProgress={yProgress} depth={0.15}>
         <FloatingMusicNote icon="mdi:music-note-quarter" className="absolute top-[60%] right-[20%] size-12 opacity-60" duration={12} delay={0.5} />
 
@@ -328,7 +271,6 @@ export default function PublicHero() {
         <FloatingPetal petalIndex={2} className="bottom-[20%] right-[15%] w-12 h-auto" duration={9} delay={1.5} />
       </ParallaxLayer>
 
-      {/* Layer 3: Foreground */}
       <ParallaxLayer xProgress={xProgress} yProgress={yProgress} depth={0.3}>
         <FloatingOrigami className="w-32 h-auto z-10" />
 
@@ -342,14 +284,10 @@ export default function PublicHero() {
 
         <Fireflies />
 
-        {/* Abstract shapes / UI accents */}
         <motion.span className="absolute bottom-[45%] right-[35%] size-2 rounded-full bg-purple-brand/60 dark:bg-white shadow-[0_0_15px_rgba(107,76,154,0.6)] dark:shadow-[0_0_15px_rgba(255,255,255,1)] mix-blend-multiply dark:mix-blend-screen" animate={{ y: [-40, 40, -40], x: [10, -10, 10], opacity: [0.5, 1, 0.5] }} transition={{ ...floatTransition, duration: 5, delay: 1.5 }} />
         <motion.span className="absolute top-[50%] left-[20%] size-2.5 rounded-full bg-purple-brand shadow-[0_0_12px_rgba(107,76,154,0.8)] mix-blend-multiply dark:mix-blend-screen" animate={{ y: [0, -20, 0], opacity: [0.6, 0.9, 0.6] }} transition={{ ...floatTransition, duration: 4, delay: 2 }} />
       </ParallaxLayer>
 
-      {/* Removed Layer 4 Cat per user request */}
-
-      {/* Center Typography */}
       <div className="relative z-10 flex flex-col items-center text-center pointer-events-none px-6 mt-8 sm:mt-16">
         <div className="overflow-hidden mb-6">
           <motion.p
@@ -404,7 +342,7 @@ export default function PublicHero() {
             y: useTransform(yProgress, [0, 1], [-30, 30]),
           }}
         >
-          {/* Plain text label floating above */}
+
           <motion.button
             onClick={handleCTA}
             className="relative z-20 mb-0 font-sans text-sm sm:text-base font-bold tracking-[0.3em] uppercase text-purple-brand dark:text-lavender hover:text-purple-brand/80 dark:hover:text-lavender/80 transition-colors drop-shadow-[0_0_10px_rgba(107,76,154,0.6)]"
@@ -415,7 +353,6 @@ export default function PublicHero() {
             Who is Ice?
           </motion.button>
 
-          {/* Magical 3D Floating Book / Enchantment Table */}
           <motion.div
             className="relative w-48 h-48 sm:w-64 sm:h-64 cursor-pointer -mt-20 sm:-mt-24"
             onClick={handleCTA}
@@ -426,11 +363,10 @@ export default function PublicHero() {
               <motion.img
                 src="/svg/other/book-paging.svg"
                 alt="Animated Book"
-                className="w-full h-full object-contain filter drop-shadow-[0_0_15px_rgba(216,180,254,0.6)]"
+                className="w-full h-full object-contain filter drop-shadow-[0_0_15px_rgba(107,76,154,0.6)] dark:drop-shadow-[0_0_15px_rgba(216,180,254,0.6)] dark:brightness-100 brightness-0 opacity-70 dark:opacity-100"
               />
             </div>
 
-            {/* Magical Letter Particles */}
             {[...Array(12)].map((_, i) => {
               const chars = ['ᔑ', 'ʖ', 'ᓵ', '↸', 'ᒷ', '⎓', '⊣', '⍑', '╎', '⋮', 'ꖌ', 'ꖎ', 'ᒲ', 'リ', '𝙹', '!¡', 'ᑑ', '∷', 'ᓭ', 'ℸ', '⚍', '⍊', '∴', 'x', '||', '⨅']
               const randomChar = chars[Math.floor(Math.random() * chars.length)]
@@ -460,7 +396,6 @@ export default function PublicHero() {
           </motion.div>
         </motion.div>
       </div>
-
 
     </section>
   )

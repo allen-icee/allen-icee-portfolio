@@ -1,3 +1,4 @@
+// src/components/public/desk/DeskObjects.tsx
 import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { motion } from 'framer-motion'
@@ -23,10 +24,9 @@ export function Glasses({ onClick }: { onClick?: () => void }) {
   return (
     <motion.div
       className="group relative flex gap-1 cursor-pointer w-48 h-20 sm:w-[30rem] sm:h-[30rem] rotate-180"
-      whileHover={{ scale: 1.05 }}
       onClick={onClick}
     >
-      <img src="/svg/other/glasses.svg" alt="Glasses" className="w-full h-full object-contain filter drop-shadow-[-15px_15px_25px_rgba(0,0,0,0.6)] dark:drop-shadow-[-15px_15px_25px_rgba(0,0,0,0.8)]" />
+      <img src="/svg/other/glasses.svg" alt="Glasses" className="w-full h-full object-contain filter drop-shadow-none dark:drop-shadow-[-5px_5px_10px_rgba(0,0,0,0.7)]" />
     </motion.div>
   )
 }
@@ -59,21 +59,22 @@ export function QuillPen() {
   )
 }
 
+const FALLBACK_POEMS = [
+  { title: "The Pour I Contemplate", author: "Allen Icee Dequiros", lines: ["And thus, like rain.", "I am but a mere plant of Yours,", "Raindrops from You may have hurt me,", "But I knew it would help me grow."] },
+  { title: "Oh Fire, Let It Be", author: "Allen Icee Dequiros", lines: ["Even in the dark, I would be there,", "Even when I'm in pain and you are too, I will be there,", "I am willing to endure the fire if it means melting my armor for you,", "I will kneel before you and give flowers,", "Till these temporary things in my hand,", "Turn into a permanent ring for you."] },
+  { title: "A Gray Life That Became A Lavender Colored", author: "Allen Icee Dequiros", lines: ["Ever since you came into my life,", "Something change from the way I see,", "You made this eyes discover this lavender colored life,", "As if you tainted me with that color of yours,", "And now we coexist", "How did you do it? Miss?"] },
+  { title: "In the Deepest Well", author: "Allen Icee Dequiros", lines: ["At the brink of being engulfted by the darkness,", "What more is to be drowned?", "If it means all of this ends,", "Pull me in somehow."] },
+  { title: "Petal in the Wind", author: "Allen Icee Dequiros", lines: ["Your heart was on the verge of closing,", "But you opened it for me,", "Like a petal in the wind,", "Death would be the only thing,", "That would keep me from being with you."] },
+  { title: "Divided Family", author: "Allen Icee Dequiros", lines: ["An awkward feeling has began to float,", "A hidden border was drawn,", "The once was close,", "Slowly fade away,", "If love could make us closer,", "Then it can also break us apart."] }
+];
+
 export function PoemNote({ className = '' }: { className?: string }) {
-  const FALLBACK_POEMS = [
-    { title: "The Pour I Contemplate", author: "Allen Icee Dequiros", lines: ["And thus, like rain.", "I am but a mere plant of Yours,", "Raindrops from You may have hurt me,", "But I knew it would help me grow."] },
-    { title: "Oh Fire, Let It Be", author: "Allen Icee Dequiros", lines: ["Even in the dark, I would be there,", "Even when I'm in pain and you are too, I will be there,", "I am willing to endure the fire if it means melting my armor for you,", "I will kneel before you and give flowers,", "Till these temporary things in my hand,", "Turn into a permanent ring for you."] },
-    { title: "A Gray Life That Became A Lavender Colored", author: "Allen Icee Dequiros", lines: ["Ever since you came into my life,", "Something change from the way I see,", "You made this eyes discover this lavender colored life,", "As if you tainted me with that color of yours,", "And now we coexist", "How did you do it? Miss?"] },
-    { title: "In the Deepest Well", author: "Allen Icee Dequiros", lines: ["At the brink of being engulfted by the darkness,", "What more is to be drowned?", "If it means all of this ends,", "Pull me in somehow."] },
-    { title: "Petal in the Wind", author: "Allen Icee Dequiros", lines: ["Your heart was on the verge of closing,", "But you opened it for me,", "Like a petal in the wind,", "Death would be the only thing,", "That would keep me from being with you."] },
-    { title: "Divided Family", author: "Allen Icee Dequiros", lines: ["An awkward feeling has began to float,", "A hidden border was drawn,", "The once was close,", "Slowly fade away,", "If love could make us closer,", "Then it can also break us apart."] }
-  ];
 
   const [poem, setPoem] = useState<any>(FALLBACK_POEMS[0]);
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    // Set a random personal poem on initial client mount to avoid hydration mismatches
+
     setPoem(FALLBACK_POEMS[Math.floor(Math.random() * FALLBACK_POEMS.length)]);
   }, []);
 
@@ -96,16 +97,16 @@ export function PoemNote({ className = '' }: { className?: string }) {
 
       const res = await fetch(`https://poetrydb.org/author/${author}/title,author,lines`, { signal: controller.signal });
       clearTimeout(timeoutId);
-      
+
       if (!res.ok) throw new Error("API Error");
-      
+
       const data = await res.json();
-      
+
       if (data && data.length > 0) {
         const shortPoems = data.filter((p: any) => p.lines && p.lines.length > 0 && p.lines.length <= 14);
         const pool = shortPoems.length > 0 ? shortPoems : data.filter((p: any) => p.lines && p.lines.length > 0);
         const randomPoem = pool[Math.floor(Math.random() * pool.length)];
-        
+
         setPoem(randomPoem);
       } else {
         throw new Error("Empty response");
@@ -124,7 +125,7 @@ export function PoemNote({ className = '' }: { className?: string }) {
         whileHover={{ scale: 1.05, rotate: 0, zIndex: 10 }}
         onClick={() => setIsOpen(true)}
       >
-        {/* Purple Push Pin (Thumbnail) */}
+
         <div className="absolute -top-4 -right-3 z-20 rotate-[30deg]">
           <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 drop-shadow-[1px_4px_3px_rgba(0,0,0,0.5)]" viewBox="0 0 24 24">
             <defs>
@@ -167,10 +168,9 @@ export function PoemNote({ className = '' }: { className?: string }) {
             className="relative shadow-[10px_25px_60px_rgba(0,0,0,0.5)] max-w-md w-full aspect-square flex flex-col text-[#2A2A2A]"
             style={{ fontFamily: '"Comic Sans MS", cursive, sans-serif' }}
           >
-            {/* The main sticky note body with bottom-right corner cut */}
+
             <div className="absolute inset-0 z-0 bg-[#FFF9C4] dark:bg-[#FFF59D]" style={{ clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 64px), calc(100% - 64px) 100%, 0 100%)' }} />
 
-            {/* Content Container */}
             <div
               className="relative z-10 flex-1 overflow-y-auto px-8 md:px-12 py-12 md:py-16 [&::-webkit-scrollbar]:hidden"
               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
@@ -204,7 +204,6 @@ export function PoemNote({ className = '' }: { className?: string }) {
               )}
             </div>
 
-            {/* Scroll Indicator Animation */}
             {poem.lines.length > 6 && (
               <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 pointer-events-none flex flex-col items-center opacity-80 animate-bounce drop-shadow-[0_0_6px_rgba(255,249,196,0.9)] dark:drop-shadow-[0_0_6px_rgba(255,245,157,0.9)]">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="text-[#1A1A1A]">
@@ -213,7 +212,6 @@ export function PoemNote({ className = '' }: { className?: string }) {
               </div>
             )}
 
-            {/* The folded flap (bottom-right) to fetch new poem */}
             <div
               className="absolute bottom-0 right-0 w-16 h-16 z-20 cursor-pointer group/fold transition-transform duration-300 hover:scale-105 origin-bottom-right"
               style={{ filter: 'drop-shadow(-3px -3px 4px rgba(0,0,0,0.2))' }}
@@ -241,7 +239,6 @@ export function PoemNote({ className = '' }: { className?: string }) {
               </div>
             </div>
 
-            {/* Purple Push Pin to Close (Modal) */}
             <div
               className="absolute -top-6 -right-4 md:-top-8 md:-right-6 z-30 cursor-pointer group/pin rotate-[30deg] origin-center hover:rotate-[15deg] transition-all hover:scale-110"
               onClick={() => setIsOpen(false)}
@@ -275,7 +272,7 @@ export function StickyNote({ title, content, color, rotate, className = '' }: { 
       whileHover={{ scale: 1.05, rotateZ: 0, zIndex: 10 }}
       transition={{ duration: 0.3 }}
     >
-      {/* Edge curl simulation */}
+
       <motion.div
         className="absolute bottom-0 right-0 w-6 h-6 bg-black/5 rounded-tl-xl transition-transform origin-bottom-right"
         variants={{ hover: { scale: 1.5, opacity: 0.8 } }}
@@ -295,7 +292,7 @@ export function AnalogClock() {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      // Get current time in Manila timezone
+
       const manilaTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Manila" });
       setTime(new Date(manilaTime));
     }, 1000);
@@ -317,30 +314,25 @@ export function AnalogClock() {
   return (
     <motion.div className="relative flex flex-col items-center gap-3 cursor-default shrink-0 mt-8" whileHover={{ scale: 1.05 }}>
 
-      {/* Top Watch Strap */}
       <div className="absolute -top-12 sm:-top-16 w-16 sm:w-20 h-16 sm:h-24 bg-gradient-to-b from-[#2a1a10] to-[#1a0f0a] rounded-t-sm shadow-[0_5px_15px_rgba(0,0,0,0.5)] z-0 flex justify-center border-x-2 border-black/40" style={{ backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px)' }}>
-        {/* Stitching */}
+
         <div className="w-[85%] h-full border-x border-dashed border-white/20 mt-1" />
       </div>
 
-      {/* Bottom Watch Strap */}
       <div className="absolute -bottom-12 sm:-bottom-16 w-16 sm:w-20 h-16 sm:h-24 bg-gradient-to-t from-[#2a1a10] to-[#1a0f0a] rounded-b-lg shadow-[0_5px_15px_rgba(0,0,0,0.5)] z-0 flex justify-center border-x-2 border-black/40" style={{ backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px)' }}>
-        {/* Stitching */}
+
         <div className="w-[85%] h-full border-x border-dashed border-white/20 mb-1" />
       </div>
 
-      {/* Watch Lugs (Silver) */}
       <div className="absolute top-0 w-20 sm:w-28 h-4 bg-gradient-to-r from-[#888] via-[#CCC] to-[#888] dark:from-[#444] dark:via-[#666] dark:to-[#444] z-0 rounded-t-sm shadow-md transition-colors" />
       <div className="absolute bottom-0 w-20 sm:w-28 h-4 bg-gradient-to-r from-[#888] via-[#CCC] to-[#888] dark:from-[#444] dark:via-[#666] dark:to-[#444] z-0 rounded-b-sm shadow-md transition-colors" />
 
-      {/* Silver Clock Outer Case */}
       <div className="relative w-36 h-36 sm:w-48 sm:h-48 rounded-full bg-gradient-to-br from-[#E0E0E0] via-[#F5F5F5] to-[#999999] dark:from-[#555] dark:via-[#777] dark:to-[#333] shadow-[0_15px_30px_rgba(0,0,0,0.6),inset_0_2px_5px_rgba(255,255,255,0.9)] dark:shadow-[0_15px_30px_rgba(0,0,0,0.8),inset_0_2px_5px_rgba(255,255,255,0.2)] flex items-center justify-center p-2 sm:p-3 z-10 border border-[#777] dark:border-[#444] transition-colors">
-        {/* Inner shadow rim */}
+
         <div className="relative w-full h-full rounded-full bg-[#1A1A1A] shadow-[inset_0_8px_20px_rgba(0,0,0,0.9)] flex items-center justify-center p-1">
-          {/* Actual Face */}
+
           <div className="relative w-full h-full rounded-full bg-[#FAF0E6] dark:bg-[#111] bg-[radial-gradient(circle_at_center,#FFFFFF_0%,#E0E0E0_100%)] dark:bg-[radial-gradient(circle_at_center,#333_0%,#000_100%)] shadow-[inset_0_2px_10px_rgba(0,0,0,0.2)] dark:shadow-[inset_0_2px_10px_rgba(0,0,0,0.8)] flex items-center justify-center overflow-hidden transition-colors">
 
-            {/* Proper Number Placement */}
             <div className="absolute inset-0 w-full h-full rounded-full">
               {[...Array(12)].map((_, i) => {
                 const num = i + 1;
@@ -354,23 +346,18 @@ export function AnalogClock() {
               })}
             </div>
 
-            {/* Date Window (6 o'clock position) */}
             <div className="absolute left-1/2 -translate-x-1/2 bottom-[18%] sm:bottom-[20%] w-10 sm:w-12 h-5 sm:h-6 bg-white dark:bg-[#222] border border-[#999]/50 dark:border-[#555] shadow-[inset_0_2px_5px_rgba(0,0,0,0.4)] dark:shadow-[inset_0_2px_5px_rgba(0,0,0,0.8)] flex items-center justify-center rounded-[2px] z-10 transition-colors">
               <span className="font-mono text-[9px] sm:text-[10px] font-bold text-black dark:text-[#EEE] tracking-tighter transition-colors">{displayDate}</span>
             </div>
 
-            {/* Hands (Silver & Black theme, Pointy) */}
-            {/* Hour */}
             <div className="absolute bottom-1/2 left-1/2 w-2 sm:w-2.5 h-8 sm:h-12 bg-gradient-to-t from-[#222] to-[#444] dark:from-[#CCC] dark:to-[#FFF] shadow-[2px_2px_4px_rgba(0,0,0,0.4)] origin-bottom z-20 transition-colors" style={{ transform: `translateX(-50%) rotate(${hourDeg}deg)`, clipPath: 'polygon(50% 0%, 100% 20%, 80% 100%, 20% 100%, 0% 20%)' }} />
-            {/* Minute */}
+
             <div className="absolute bottom-1/2 left-1/2 w-1.5 sm:w-2 h-12 sm:h-16 bg-gradient-to-t from-[#222] to-[#444] dark:from-[#CCC] dark:to-[#FFF] shadow-[2px_2px_5px_rgba(0,0,0,0.4)] origin-bottom z-20 transition-colors" style={{ transform: `translateX(-50%) rotate(${minuteDeg}deg)`, clipPath: 'polygon(50% 0%, 100% 15%, 80% 100%, 20% 100%, 0% 15%)' }} />
-            {/* Second */}
+
             <div className="absolute bottom-1/2 left-1/2 w-0.5 sm:w-[2px] h-14 sm:h-20 bg-[#D32F2F] dark:bg-[#FF5252] shadow-[1px_2px_3px_rgba(0,0,0,0.3)] origin-bottom z-30 transition-colors" style={{ transform: `translateX(-50%) rotate(${secondDeg}deg)`, clipPath: 'polygon(50% 0%, 100% 10%, 100% 100%, 0% 100%, 0% 10%)' }} />
 
-            {/* Center Dot */}
             <div className="absolute top-1/2 left-1/2 w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-[#E0E0E0] dark:bg-[#333] shadow-[0_4px_6px_rgba(0,0,0,0.6)] z-40 -translate-x-1/2 -translate-y-1/2 border-2 border-[#555] dark:border-[#888] transition-colors" />
 
-            {/* Glass Glare */}
             <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/40 to-transparent pointer-events-none z-50" />
           </div>
         </div>

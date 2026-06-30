@@ -1,3 +1,4 @@
+// src/pages/public/PublicProjectDetail.tsx
 import { useParams, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Icon } from '@iconify/react'
@@ -46,7 +47,7 @@ export default function PublicProjectDetail() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
     >
-      {/* Back button */}
+
       <motion.button
         onClick={() => navigate('/')}
         className="mb-10 flex items-center gap-2 text-sm text-charcoal/50 transition-colors hover:text-purple-brand dark:text-white/50 dark:hover:text-purple-brand/90"
@@ -59,7 +60,6 @@ export default function PublicProjectDetail() {
         Back to Library
       </motion.button>
 
-      {/* Cover + header */}
       <div className="mb-12 flex flex-col gap-8 sm:flex-row">
         <div
           className="aspect-[5/7] w-full shrink-0 rounded-2xl bg-cover bg-center shadow-lg sm:w-56"
@@ -84,7 +84,6 @@ export default function PublicProjectDetail() {
         </div>
       </div>
 
-      {/* Description — ledger / textbook style */}
       <div className="rounded-2xl border border-charcoal/5 bg-white/40 p-8 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
         <h2
           className="mb-4 text-lg font-medium text-charcoal dark:text-white/90"
@@ -97,7 +96,6 @@ export default function PublicProjectDetail() {
           {project.description}
         </p>
 
-        {/* Tech stack */}
         <div className="mt-8">
           <h3 className="mb-3 text-xs tracking-widest uppercase text-charcoal/40 dark:text-white/40">
             Tools &amp; Technologies
@@ -114,7 +112,6 @@ export default function PublicProjectDetail() {
           </div>
         </div>
 
-        {/* GitHub link */}
         <div className="mt-8 flex items-center gap-3 rounded-xl bg-charcoal/[0.03] p-4 dark:bg-white/[0.02]">
           <Icon icon="lucide:github" className="size-5 text-charcoal/40 dark:text-white/40" />
           <a
@@ -128,7 +125,6 @@ export default function PublicProjectDetail() {
         </div>
       </div>
 
-      {/* ponytail: bottom nav hint */}
       <p className="mt-10 text-center text-xs text-charcoal/30 dark:text-white/30">
         <Icon icon="lucide:arrow-left" className="mr-1 inline size-3" />
         Use the <kbd className="rounded border border-charcoal/10 bg-white/50 px-1 py-0.5 font-mono text-[10px]">Back</kbd> button or browser back to return

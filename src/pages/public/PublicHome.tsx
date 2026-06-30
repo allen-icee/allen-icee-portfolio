@@ -1,13 +1,13 @@
-import PublicHero from '../../components/public/PublicHero'
+// src/pages/public/PublicHome.tsx
+import PublicHero from '../../components/public/sections/PublicHero'
 import { Navbar } from '../../components/navigation/Navbar'
-import PublicAbout from '../../components/public/PublicAbout'
-import PublicExperience from '../../components/public/PublicExperience'
-import PublicSkills from '../../components/public/PublicSkills'
-import PublicProjects from '../../components/public/PublicProjects'
-import PublicArtGallery from '../../components/public/PublicArtGallery'
-import PublicResume from '../../components/public/PublicResume'
-import PublicContact from '../../components/public/PublicContact'
-import PublicFooter from '../../components/public/PublicFooter'
+import PublicAbout from '../../components/public/sections/PublicAbout'
+import PublicExperience from '../../components/public/sections/PublicExperience'
+import PublicSkillsEduc from '../../components/public/sections/PublicSkillsEduc'
+import PublicProjects from '../../components/public/sections/PublicProjects'
+import PublicArtGallery from '../../components/public/sections/PublicArtGallery'
+import PublicResumeCert from '../../components/public/sections/PublicResumeCert'
+import PublicContactFooter from '../../components/public/sections/PublicContactFooter'
 
 export default function PublicHome() {
   return (
@@ -15,17 +15,15 @@ export default function PublicHome() {
       <PublicHero />
       <Navbar />
 
-      {/* ponytail: scroll target for the "Open The Library" CTA */}
       <section id="library-content" />
 
       <PublicAbout />
+      <PublicExperience />
       <PublicProjects />
       <PublicArtGallery />
-      <PublicExperience />
-      <PublicSkills />
-      <PublicResume />
-      <PublicContact />
-      <PublicFooter />
+      <PublicSkillsEduc />
+      <PublicResumeCert />
+      <PublicContactFooter />
     </>
   )
 }

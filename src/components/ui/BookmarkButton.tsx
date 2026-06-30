@@ -1,3 +1,4 @@
+// src/components/ui/BookmarkButton.tsx
 import { motion } from 'framer-motion'
 import { Icon } from '@iconify/react'
 
@@ -20,9 +21,9 @@ export default function BookmarkButton({ onClick, className = '' }: BookmarkButt
       whileHover={{ y: -2, x: 2 }}
       whileTap={{ y: 1, x: 0 }}
     >
-      {/* Small ribbon strip on the left edge */}
+
       <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-purple-brand/50 rounded-l-md transition-colors group-hover:bg-purple-brand/70" />
-      
+
       <Icon icon="lucide:book-open" className="size-5 text-purple-brand/70 transition-transform group-hover:-rotate-12" />
       <span>Open Library</span>
     </motion.button>

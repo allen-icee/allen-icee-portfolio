@@ -1,3 +1,4 @@
+// src/pages/public/PublicNotFound.tsx
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Icon } from '@iconify/react'
