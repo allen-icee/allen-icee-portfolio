@@ -9,7 +9,26 @@ export interface StoredImage {
   fullPath: string
 }
 
+const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
+const ALLOWED_MIME_TYPES = [
+  'image/jpeg',
+  'image/png',
+  'image/webp',
+  'image/gif',
+  'application/pdf'
+]
+
+export function validateFile(file: File | Blob) {
+  if (file.size > MAX_FILE_SIZE) {
+    throw new Error('File size exceeds the 5MB limit.')
+  }
+  if (!ALLOWED_MIME_TYPES.includes(file.type)) {
+    throw new Error('Invalid file type. Only JPEG, PNG, WEBP, GIF, and PDF are allowed.')
+  }
+}
+
 export async function uploadImage(blob: Blob, fileName: string, onProgress?: (pct: number) => void): Promise<StoredImage> {
+  validateFile(blob)
   const storageRef = ref(storage, `${IMAGES_PREFIX}/${fileName}`)
   const task = uploadBytesResumable(storageRef, blob)
 

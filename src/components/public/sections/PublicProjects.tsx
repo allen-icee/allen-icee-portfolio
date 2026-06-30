@@ -1,15 +1,16 @@
 // src/components/public/sections/PublicProjects.tsx
-import { useState, useCallback, useMemo, useEffect } from 'react'
+import { useState, useCallback, useMemo, useEffect, memo, Suspense, lazy } from 'react'
 import { motion } from 'framer-motion'
 import { Fireflies, FloatingPetal } from '../../ui/Particles'
 import { Icon } from '@iconify/react'
 import { useCollection } from '../../../hooks/useCollection'
-import type { Project } from '../../../types'
+import type { MockProject as Project } from '../../../types'
 import { MOCK_PROJECTS } from '../../../data/projectsData'
-import BookModal from '../modals/BookModal'
+
+const BookModal = lazy(() => import('../modals/BookModal'))
 
 
-function BookCard({ project, index, onSelect }: { project: Project; index: number; onSelect: (p: Project) => void }) {
+const BookCard = memo(function BookCard({ project, index, onSelect }: { project: Project; index: number; onSelect: (p: Project) => void }) {
   const handleClick = useCallback(() => {
     onSelect(project)
   }, [onSelect, project])
@@ -124,7 +125,7 @@ function BookCard({ project, index, onSelect }: { project: Project; index: numbe
       </div>
     </motion.button>
   )
-}
+})
 
 export default function PublicProjects() {
   const { items: dbProjects, loading } = useCollection<Project>('projects')
@@ -223,7 +224,9 @@ export default function PublicProjects() {
         )}
       </div>
 
-      <BookModal project={selectedProject} onClose={() => setSelectedProject(null)} />
+      <Suspense fallback={null}>
+        <BookModal project={selectedProject} onClose={() => setSelectedProject(null)} />
+      </Suspense>
     </section>
   )
 }

@@ -6,16 +6,29 @@ import { Fireflies, FloatingPetal } from '../../ui/Particles'
 import ResumeModal from '../modals/ResumeModal'
 import CertModal from '../modals/CertModal'
 import { Logo } from '../../ui/Logo'
-import { certificates } from '../../../data/certificatesData'
+import { certificates as mockCertificates } from '../../../data/certificatesData'
+import { useCollection } from '../../../hooks/useCollection'
+import type { Certificate } from '../../../types'
+import { useEffect } from 'react'
+import { ref, getDownloadURL } from 'firebase/storage'
+import { storage } from '../../../services/firebaseConfig'
 
 
 
 
 export default function PublicResumeCert() {
+  const { items: dbCerts } = useCollection<Certificate>('certificates')
   const [selectedCertIndex, setSelectedCertIndex] = useState<number | null>(null)
   const [isResumeOpen, setIsResumeOpen] = useState(false)
+  const [resumeUrl, setResumeUrl] = useState<string>('/placeholder-resume.pdf')
 
-  const dummyResumeUrl = '/placeholder-resume.pdf'
+  useEffect(() => {
+    getDownloadURL(ref(storage, 'images/resume.pdf'))
+      .then(url => setResumeUrl(url))
+      .catch(() => setResumeUrl('/placeholder-resume.pdf'))
+  }, [])
+
+  const certificates = dbCerts.length > 0 ? dbCerts : mockCertificates
 
   return (
     <>
@@ -93,7 +106,7 @@ export default function PublicResumeCert() {
                       </div>
 
                       <a
-                        href={dummyResumeUrl}
+                        href={resumeUrl}
                         download
                         className="group relative z-30 flex items-center justify-center size-14 sm:size-16 md:size-20 bg-gradient-to-br from-[#FFD166] to-[#F4A261] dark:from-[#FFB703] dark:to-[#FB8500] text-neutral-900 font-black font-sans text-[11px] sm:text-[12px] md:text-[14px] uppercase tracking-tighter leading-none drop-shadow-xl rotate-12 transition-all hover:scale-110 hover:rotate-0 overflow-hidden"
                         style={{ clipPath: 'polygon(50% 0%, 60.3% 15.6%, 75% 6.7%, 78.1% 23.4%, 93.3% 25%, 86.6% 40.3%, 100% 50%, 86.6% 59.7%, 93.3% 75%, 78.1% 76.6%, 75% 93.3%, 60.3% 84.4%, 50% 100%, 39.7% 84.4%, 25% 93.3%, 21.9% 76.6%, 6.7% 75%, 13.4% 59.7%, 0% 50%, 13.4% 40.3%, 6.7% 25%, 21.9% 23.4%, 25% 6.7%, 39.7% 15.6%)' }}
@@ -196,7 +209,7 @@ export default function PublicResumeCert() {
       <ResumeModal
         isOpen={isResumeOpen}
         onClose={() => setIsResumeOpen(false)}
-        resumeUrl={dummyResumeUrl}
+        resumeUrl={resumeUrl}
       />
     </>
   )

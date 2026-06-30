@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import { Icon } from '@iconify/react'
 import { useCollection } from '../../../hooks/useCollection'
 import { mockExperiences } from '../../../data/portfolioData'
-import type { Experience } from '../../../types'
+import type { MockExperience as Experience } from '../../../types'
 import { Fireflies, FloatingPetal } from '../../ui/Particles'
 
 const formatMonth = (dateStr: string) => {
@@ -30,7 +30,7 @@ const STAMPS = [
 ]
 
 function ArchiveCard({ exp, index, hiddenClass = '' }: { exp: Experience & { id: string }; index: number; hiddenClass?: string }) {
-  const archiveNum = `ARC-${(index + 1).toString().padStart(3, '0')}`
+  const archiveNum = `ARC-${(exp.order || index + 1).toString().padStart(3, '0')}`
   const offsetClass = OFFSETS[index % OFFSETS.length]
   const rotateClass = ROTATIONS[index % ROTATIONS.length]
   const stamp = STAMPS[index % STAMPS.length]
@@ -97,7 +97,7 @@ function ArchiveCard({ exp, index, hiddenClass = '' }: { exp: Experience & { id:
               </p>
             </div>
             <div className="mt-2 md:mt-0 font-mono text-[10px] text-charcoal/50 dark:text-[#EAE0D5]/50 border border-charcoal/10 dark:border-white/10 px-2 py-0.5 rounded-sm bg-charcoal/[0.02] dark:bg-white/[0.02]">
-              {formatMonth(exp.timeline.start)} – {formatMonth(exp.timeline.end ?? 'Present')}
+              {formatMonth(exp.startMonth)} {exp.startYear} – {exp.endYear ? `${formatMonth(exp.endMonth || '')} ${exp.endYear}` : 'Present'}
             </div>
           </div>
 
@@ -105,9 +105,9 @@ function ArchiveCard({ exp, index, hiddenClass = '' }: { exp: Experience & { id:
             {exp.description}
           </p>
 
-          {exp.technologies && exp.technologies.length > 0 && (
+          {exp.skillsAcquired && exp.skillsAcquired.length > 0 && (
             <div className="flex flex-wrap gap-2">
-              {exp.technologies.map((tech: any) => (
+              {exp.skillsAcquired.map((tech: any) => (
                 <span
                   key={tech}
                   className="rounded-sm bg-[#EAE0D5] dark:bg-[#1A1412] border border-[#C8B8A6] dark:border-white/5 px-2 py-0.5 text-[10px] font-mono text-[#5C3A21] dark:text-[#EAE0D5]/70 shadow-sm"
@@ -134,7 +134,9 @@ export default function PublicExperience() {
   const { items: experiences, loading } = useCollection<Experience>('experience')
   const [showAllMobile, setShowAllMobile] = useState(false)
 
-  const displayExperiences = experiences.length > 0 ? experiences : mockExperiences
+  const displayExperiences = experiences.length > 0 
+    ? [...experiences].sort((a, b) => (a.order || 0) - (b.order || 0)) 
+    : mockExperiences as unknown as Experience[]
 
   return (
     <section id="experience" className="relative w-full overflow-hidden px-6 py-20 md:py-28 transition-colors duration-700 bg-transparent">

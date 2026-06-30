@@ -4,6 +4,9 @@ import { motion, AnimatePresence } from 'framer-motion'
 import QRCode from 'react-qr-code'
 import { Fireflies, FloatingPetal } from '../../ui/Particles'
 import type Lenis from 'lenis'
+import AdminLoginModal from '../../admin/modals/AdminLoginModal'
+import { useCollection } from '../../../hooks/useCollection'
+import type { ContactInfo } from '../../../types'
 
 const socialLinks = [
   { platform: 'Email', username: 'alleniceedequiros@gmail.com', url: 'mailto:alleniceedequiros@gmail.com', qty: 1 },
@@ -14,9 +17,34 @@ const socialLinks = [
 ]
 
 export default function PublicContactFooter() {
+  const { items } = useCollection<ContactInfo>('contactInfo')
+  const dbContact = items[0]
+
+  const displayLinks = dbContact ? [
+    { platform: 'Email', username: dbContact.email, url: `mailto:${dbContact.email}`, qty: 1 },
+    { platform: 'GitHub', username: dbContact.github?.replace('https://github.com/', '@') || '', url: dbContact.github, qty: 1 },
+    { platform: 'LinkedIn', username: dbContact.linkedin?.replace('https://www.linkedin.com/in/', 'in/') || '', url: dbContact.linkedin, qty: 1 },
+    { platform: 'Facebook', username: dbContact.facebook?.split('.com/')[1]?.replace('/', '') || 'Facebook', url: dbContact.facebook, qty: 1 },
+    { platform: 'Instagram', username: dbContact.instagram?.replace('https://www.instagram.com/', '@')?.replace('/', '') || '', url: dbContact.instagram, qty: 1 }
+  ].filter(link => link.url) : socialLinks
+
   const [formData, setFormData] = useState({ name: '', email: '', message: '' })
   const [isSending, setIsSending] = useState(false)
   const [isSent, setIsSent] = useState(false)
+  
+  const [, setAdminClickCount] = useState(0)
+  const [showAdminLogin, setShowAdminLogin] = useState(false)
+
+  const handleAdminTrigger = () => {
+    setAdminClickCount(prev => {
+      const nextCount = prev + 1
+      if (nextCount >= 5) {
+        setShowAdminLogin(true)
+        return 0
+      }
+      return nextCount
+    })
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -102,10 +130,7 @@ export default function PublicContactFooter() {
                 <h2 className="text-2xl font-black uppercase tracking-widest mb-1">
                   CONTACT ME
                 </h2>
-                <p className="tracking-widest opacity-80 mt-1">
-                  0916-3153-670
-                </p>
-                <p className="tracking-widest opacity-80 leading-none">
+                <p className="tracking-widest opacity-80 mt-1 leading-none">
                   Tarlac, Philippines
                 </p>
 
@@ -126,7 +151,7 @@ export default function PublicContactFooter() {
                   <span>PRICE</span>
                 </div>
 
-                {socialLinks.map((link) => (
+                {displayLinks.map((link) => (
                   <a
                     key={link.platform}
                     href={link.url}
@@ -269,7 +294,12 @@ export default function PublicContactFooter() {
                 <p className="font-bold tracking-widest text-center mb-0">
                   THANK YOU FOR VISITING
                 </p>
-                <p className="opacity-60 mt-0">© {new Date().getFullYear()} ⊂⁠(⁠≽^•⩊•^≼⁠)⁠つ</p>
+                <p className="opacity-60 mt-0">
+                  © {new Date().getFullYear()}{' '}
+                  <span onClick={handleAdminTrigger} className="cursor-default select-none">
+                    ⊂⁠(⁠≽^•⩊•^≼⁠)⁠つ
+                  </span>
+                </p>
 
                 <a href="https://www.youtube.com/watch?v=L8XbI9aJOXk" target="_blank" rel="noopener noreferrer" className="my-1 p-1 hover:scale-105 transition-transform duration-300 cursor-pointer mix-blend-multiply opacity-80">
                   <QRCode
@@ -294,6 +324,7 @@ export default function PublicContactFooter() {
         </motion.div>
 
       </div>
+      <AdminLoginModal isOpen={showAdminLogin} onClose={() => setShowAdminLogin(false)} />
     </section>
   )
 }

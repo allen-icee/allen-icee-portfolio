@@ -1,8 +1,18 @@
 // ponytail: one-time seed script. Run with: npx tsx scripts/seed-firestore.ts
 // Pushes mock data into Firestore so the admin has real content to edit.
 
+import 'dotenv/config'
 import { initializeApp } from 'firebase/app'
 import { getFirestore, doc, setDoc } from 'firebase/firestore'
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+import { MOCK_PROJECTS } from '../src/data/projectsData'
+import { mockSkills, mockExperiences, mockArtworks } from '../src/data/portfolioData'
+import { certificates } from '../src/data/certificatesData'
+
+if (!process.env.VITE_FIREBASE_PROJECT_ID) {
+  console.error("❌ Error: Missing VITE_FIREBASE_PROJECT_ID in environment variables.")
+  process.exit(1)
+}
 
 const firebaseConfig = {
   apiKey: process.env.VITE_FIREBASE_API_KEY ?? '',
@@ -15,130 +25,96 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig)
 const db = getFirestore(app)
+const auth = getAuth(app)
 
 const now = Date.now()
 
-const projects = [
-  {
-    title: 'Icee Portfolio',
-    tagline: 'A warm library on the web',
-    description: 'The very site you are browsing. Built as a digital library with a paper-aesthetic design system, smooth Lenis scrolling, a hidden admin panel, and a fully typed React + TypeScript architecture.',
-    techStack: ['React', 'TypeScript', 'Tailwind CSS v4', 'Framer Motion', 'Firebase', 'Lenis'],
-    coverImage: 'https://picsum.photos/seed/icee-portfolio/400/560',
-    githubLink: 'https://github.com/anomalyco/allen-icee-portfolio',
-    isFeatured: true,
-    createdAt: now,
-    updatedAt: now,
-  },
-  {
-    title: 'Task Flow',
-    tagline: 'Kanban that feels like paper',
-    description: 'A project management board inspired by physical sticky notes and corkboards. Drag-and-drop with smooth animations, real-time collaboration via WebSockets.',
-    techStack: ['React', 'Node.js', 'Socket.io', 'PostgreSQL', 'Tailwind CSS'],
-    coverImage: 'https://picsum.photos/seed/task-flow/400/560',
-    githubLink: 'https://github.com/anomalyco/task-flow',
-    isFeatured: true,
-    createdAt: now,
-    updatedAt: now,
-  },
-  {
-    title: 'Aurora API',
-    tagline: 'Lightweight, typed, and fast',
-    description: 'A RESTful API gateway with automatic OpenAPI documentation, Zod-powered request validation, and sub-millisecond response times.',
-    techStack: ['TypeScript', 'Node.js', 'Express', 'Zod', 'Redis'],
-    coverImage: 'https://picsum.photos/seed/aurora-api/400/560',
-    githubLink: 'https://github.com/anomalyco/aurora-api',
-    isFeatured: false,
-    createdAt: now,
-    updatedAt: now,
-  },
-  {
-    title: 'Pixel Studio',
-    tagline: 'A canvas for generative art',
-    description: 'An in-browser creative coding environment with real-time preview, layer system, and export-to-SVG/PNG.',
-    techStack: ['React', 'Canvas API', 'Web Workers', 'Zustand', 'Tailwind CSS'],
-    coverImage: 'https://picsum.photos/seed/pixel-studio/400/560',
-    githubLink: 'https://github.com/anomalyco/pixel-studio',
-    isFeatured: false,
-    createdAt: now,
-    updatedAt: now,
-  },
-]
-
-const skills = [
-  { name: 'React', category: 'Frontend', yearsOfExperience: 4, confidence: 90, icon: 'logos:react', createdAt: now, updatedAt: now },
-  { name: 'TypeScript', category: 'Language', yearsOfExperience: 3, confidence: 82, icon: 'logos:typescript-icon', createdAt: now, updatedAt: now },
-  { name: 'Node.js', category: 'Backend', yearsOfExperience: 3, confidence: 78, icon: 'logos:nodejs-icon', createdAt: now, updatedAt: now },
-  { name: 'Firebase', category: 'Backend', yearsOfExperience: 2, confidence: 65, icon: 'logos:firebase', createdAt: now, updatedAt: now },
-  { name: 'Tailwind CSS', category: 'Frontend', yearsOfExperience: 3, confidence: 85, icon: 'logos:tailwindcss-icon', createdAt: now, updatedAt: now },
-  { name: 'Figma', category: 'Design', yearsOfExperience: 2, confidence: 60, icon: 'logos:figma', createdAt: now, updatedAt: now },
-]
-
-const experience = [
-  {
-    role: 'Senior Frontend Engineer',
-    company: 'Tech Co.',
-    timeline: { start: '2022-03', end: undefined },
-    description: 'Leading the frontend architecture team. Built component libraries, improved Core Web Vitals by 40%, and mentored junior developers.',
-    technologies: ['React', 'TypeScript', 'Tailwind CSS'],
-    createdAt: now, updatedAt: now,
-  },
-  {
-    role: 'Full-Stack Developer',
-    company: 'Startup Inc.',
-    timeline: { start: '2020-06', end: '2022-02' },
-    description: 'Built and shipped three products from scratch. Managed cloud infrastructure and implemented CI/CD pipelines.',
-    technologies: ['Node.js', 'React', 'Firebase', 'PostgreSQL'],
-    createdAt: now, updatedAt: now,
-  },
-]
-
-const artworks = [
-  { title: 'Dusk Garden', imageURL: 'https://picsum.photos/seed/dusk-garden/600/800', medium: 'Digital Painting — Procreate', story: 'Inspired by the quiet hour when the sun has set but the streetlights haven\'t yet flickered on.', createdAt: now, updatedAt: now },
-  { title: 'The Lighthouse Keeper', imageURL: 'https://picsum.photos/seed/lighthouse/600/800', medium: 'Vector Illustration — Adobe Illustrator', story: 'A tribute to the solitary stewards of the coast.', createdAt: now, updatedAt: now },
-  { title: 'Midnight Ferris Wheel', imageURL: 'https://picsum.photos/seed/ferris/600/800', medium: 'Mixed Media — Photoshop + Photography', story: 'The neon glow against the fog created an almost surreal atmosphere.', createdAt: now, updatedAt: now },
-  { title: 'Study in Amber', imageURL: 'https://picsum.photos/seed/amber/600/800', medium: 'Oil on Canvas (Digital) — Rebelle 6', story: 'An exploration of warm light on skin and fabric.', createdAt: now, updatedAt: now },
-  { title: 'Botanical No. 7', imageURL: 'https://picsum.photos/seed/botanical/600/800', medium: 'Watercolor + Ink — Photoshop', story: 'Part of an ongoing series documenting plants that thrive in neglect.', createdAt: now, updatedAt: now },
-  { title: 'Silhouettes at Dawn', imageURL: 'https://picsum.photos/seed/silhouettes/600/800', medium: 'Photography — Sony A7III', story: 'Figures in the distance were strangers moving through the mist.', createdAt: now, updatedAt: now },
-]
-
 async function seed() {
-  console.log('Seeding Firestore…')
+  const email = process.env.SEED_EMAIL
+  const password = process.env.SEED_PASSWORD
 
-  for (const proj of projects) {
-    const ref = doc(db, 'projects', proj.title.toLowerCase().replace(/\s+/g, '-'))
-    await setDoc(ref, proj)
+  if (!email || !password) {
+    console.error("❌ Error: Permission Denied.")
+    console.error("Because we secured the database, you must be logged in to seed data.")
+    console.error("Please add SEED_EMAIL=\"your_email\" and SEED_PASSWORD=\"your_password\" to your .env file and run this again.")
+    process.exit(1)
+  }
+
+  console.log('Logging in to Firebase...')
+  await signInWithEmailAndPassword(auth, email, password)
+  
+  console.log('Successfully logged in! Seeding Firestore…')
+
+  for (const proj of MOCK_PROJECTS) {
+    const ref = doc(db, 'projects', proj.id)
+    await setDoc(ref, { ...proj, createdAt: now, updatedAt: now })
     console.log(`  ✓ project: ${proj.title}`)
   }
 
-  for (const skill of skills) {
-    const ref = doc(db, 'skills', skill.name.toLowerCase().replace(/\s+/g, '-'))
-    await setDoc(ref, skill)
+  for (const skill of mockSkills) {
+    const ref = doc(db, 'skills', skill.id)
+    await setDoc(ref, { ...skill, createdAt: now, updatedAt: now })
     console.log(`  ✓ skill: ${skill.name}`)
   }
 
-  for (const exp of experience) {
-    const ref = doc(db, 'experience', exp.role.toLowerCase().replace(/\s+/g, '-'))
-    await setDoc(ref, exp)
+  for (const exp of mockExperiences) {
+    const ref = doc(db, 'experience', exp.id)
+    await setDoc(ref, { ...exp, createdAt: exp.createdAt || now, updatedAt: exp.updatedAt || now })
     console.log(`  ✓ experience: ${exp.role}`)
   }
 
-  for (const art of artworks) {
-    const ref = doc(db, 'artworks', art.title.toLowerCase().replace(/\s+/g, '-'))
-    await setDoc(ref, art)
+  for (const art of mockArtworks) {
+    const ref = doc(db, 'artworks', art.id)
+    await setDoc(ref, { ...art, createdAt: now, updatedAt: now })
     console.log(`  ✓ artwork: ${art.title}`)
   }
 
-  // Journal entry
-  await setDoc(doc(db, 'settings', 'journal'), {
-    title: 'The Open Journal',
-    body: `<p>Dear Visitor,</p><p>My name is Ice. Every project begins as a blank page — a quiet space where curiosity meets craft.</p><p>Welcome to my library.</p>`,
-    signature: '— Ice',
-    updatedAt: now,
-  })
-  console.log('  ✓ journal entry')
+  // Adding empty arrays for optional lists if they don't exist
+  // Or seed other defaults here.
+  
+  const skillCategories = [
+    { id: 'frontend', name: 'Frontend', classification: 'technical', createdAt: now, updatedAt: now },
+    { id: 'backend', name: 'Backend', classification: 'technical', createdAt: now, updatedAt: now },
+    { id: 'database', name: 'Database', classification: 'technical', createdAt: now, updatedAt: now },
+    { id: 'mobile', name: 'Mobile', classification: 'technical', createdAt: now, updatedAt: now },
+    { id: 'desktop', name: 'Desktop', classification: 'technical', createdAt: now, updatedAt: now },
+    { id: 'language', name: 'Language', classification: 'technical', createdAt: now, updatedAt: now },
+    { id: 'design', name: 'Design', classification: 'technical', createdAt: now, updatedAt: now },
+    { id: 'tools', name: 'Tools', classification: 'technical', createdAt: now, updatedAt: now },
+    { id: 'testing', name: 'Testing', classification: 'technical', createdAt: now, updatedAt: now },
+    { id: 'networking', name: 'Networking', classification: 'technical', createdAt: now, updatedAt: now },
+    { id: 'creative', name: 'Creative', classification: 'technical', createdAt: now, updatedAt: now },
+    { id: 'professional', name: 'Professional', classification: 'professional', createdAt: now, updatedAt: now },
+    { id: 'soft-skills', name: 'Soft Skills', classification: 'professional', createdAt: now, updatedAt: now },
+  ]
+  
+  for (const cat of skillCategories) {
+    await setDoc(doc(db, 'skillCategories', cat.id), cat)
+  }
+  console.log('  ✓ skillCategories')
 
-  console.log('\nDone!')
+  for (const cert of certificates) {
+    const ref = doc(db, 'certificates', cert.id)
+    await setDoc(ref, { ...cert, createdAt: now, updatedAt: now })
+    console.log(`  ✓ certificate: ${cert.title}`)
+  }
+  
+  const contactInfo = {
+    id: 'primary',
+    email: 'alleniceedequiros@gmail.com',
+    phone: '',
+    github: 'https://github.com/mr-dearest',
+    linkedin: 'https://www.linkedin.com/in/allen-icee-dequiros/',
+    facebook: 'https://www.facebook.com/AllenIceeDequiros',
+    instagram: 'https://www.instagram.com/allen_icee/',
+    updatedAt: now
+  }
+  await setDoc(doc(db, 'contactInfo', 'primary'), contactInfo)
+  console.log('  ✓ contactInfo: primary')
+
+  console.log('\nDone! You can now view your live data in the Firebase Console.')
 }
 
-seed().catch(console.error)
+seed().catch((err) => {
+  console.error("Error seeding database:", err)
+})

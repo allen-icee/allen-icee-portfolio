@@ -2,9 +2,20 @@ import { useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import { Icon } from '@iconify/react'
 import AdminSidebar from '../components/admin/components/AdminSidebar'
+import { useAuth } from '../hooks/useAuth'
+import { Navigate } from 'react-router-dom'
 
 export default function AdminLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const { user, loading } = useAuth()
+
+  if (loading) {
+    return <div className="min-h-screen bg-black flex items-center justify-center text-white">Loading...</div>
+  }
+
+  if (!user) {
+    return <Navigate to="/" replace />
+  }
 
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-gray-900 via-gray-950 to-black text-gray-100">

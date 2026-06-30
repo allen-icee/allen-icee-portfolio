@@ -1,8 +1,9 @@
-import type { Project } from '../types'
+import type { MockProject as Project } from '../types'
 
 export const MOCK_PROJECTS: Project[] = [
   {
     id: 'senyafsl',
+    order: 1,
     title: 'SenyaFSL: Gamified Filipino Sign Language Learning App',
     tagline: 'Cross-platform gamified FSL learning app',
     description: 'Developed a cross-platform Filipino Sign Language (FSL) learning application with gamified lessons, progressive levels, and achievement-based learning.\n\nIntegrated gesture recognition using MediaPipe and TensorFlow to create interactive sign language gameplay and improve learning engagement.\n\nBuilt mobile-ready deployment using Capacitor with Firebase Authentication, Firestore, and Cloud Functions for scalable backend services.',
@@ -21,6 +22,7 @@ export const MOCK_PROJECTS: Project[] = [
   },
   {
     id: 'senyafsl-lite',
+    order: 2,
     title: 'SenyasFSL-Lite',
     tagline: 'Lightweight FSL app for low-end devices',
     description: 'Built a lightweight version of SenyaFSL optimized for lower-end Android devices and limited-bandwidth environments.\n\nImplemented a searchable FSL dictionary and streamlined educational modules while minimizing application size and resource usage.\n\nFocused on mobile accessibility, responsive UI, and improved performance for broader user adoption.',
@@ -34,6 +36,7 @@ export const MOCK_PROJECTS: Project[] = [
   },
   {
     id: 'mtop',
+    order: 3,
     title: "Motorized Tricycle Operator's Permit (MTOP) System",
     tagline: 'Municipal permit management system',
     description: "Developed a municipal Motorized Tricycle Operator’s Permit (MTOP) management system to automate franchise applications, renewals, fee tracking, and permit generation.\n\nBuilt an Electron-based desktop client for municipal staff to manage OR records, payments, and operational workflows.\n\nImplemented synchronization workers, automated expiration alerts, and audit logging to improve regulatory compliance and data reliability.",
@@ -50,6 +53,7 @@ export const MOCK_PROJECTS: Project[] = [
   },
   {
     id: 'stall-management',
+    order: 4,
     title: 'Stall Management System',
     tagline: 'Public market stall and tenant management',
     description: 'Created a stall and tenant management system for municipal public markets, including building layouts, contracts, payments, and vendor records.\n\nAutomated contract monitoring, penalty computation, and payment tracking to reduce manual administrative workload.\n\nImplemented role-based access control and Excel import utilities for efficient operational management.',
@@ -67,6 +71,7 @@ export const MOCK_PROJECTS: Project[] = [
   },
   {
     id: 'library-system',
+    order: 5,
     title: 'Municipal Library System',
     tagline: 'Digital library management system',
     description: 'Developed a digital library management system for automating book circulation, visitor logging, overdue monitoring, and patron management.\n\nBuilt a centralized public catalog and administrative dashboard to replace paper-based tracking processes.\n\nAdded automated overdue notifications, report exports, and library card management features.',
@@ -83,6 +88,7 @@ export const MOCK_PROJECTS: Project[] = [
   },
   {
     id: 'queuing-system',
+    order: 6,
     title: 'Queuing System',
     tagline: 'Real-time clinic queue management',
     description: 'Built a real-time clinic queue management system with queue kiosks, digital displays, reporting modules, and department-based services.\n\nIntegrated Laravel Reverb WebSockets for live queue broadcasting and synchronized display updates.\n\nImproved patient flow and operational efficiency through structured intake and queue monitoring features.',
@@ -99,6 +105,7 @@ export const MOCK_PROJECTS: Project[] = [
   },
   {
     id: 'janedesk',
+    order: 7,
     title: 'JaneDesk Website Portfolio',
     tagline: 'Responsive full-stack portfolio platform',
     description: 'Built a responsive full-stack portfolio platform to showcase projects, technical skills, and professional experience.\n\nDeveloped a monorepo architecture combining a React frontend with a Laravel-powered backend API.\n\nImplemented responsive UI design, optimized asset delivery, and integrated contact form functionality.',
@@ -117,6 +124,7 @@ export const MOCK_PROJECTS: Project[] = [
   },
   {
     id: 'ggg-inventory',
+    order: 8,
     title: 'GG&G Inventory Management App',
     tagline: 'Cross-platform inventory tracking',
     description: 'Developed a cross-platform inventory management application for tracking stock levels, deliveries, and client orders across multiple locations.\n\nImplemented synchronized mobile and web interfaces with real-time Firestore database updates.\n\nDesigned responsive dashboards and inventory workflows to reduce stock discrepancies and improve monitoring efficiency.',

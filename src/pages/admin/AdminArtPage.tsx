@@ -1,71 +1,198 @@
-// src/pages/admin/AdminArtPage.tsx
 import { useState } from 'react'
 import { useCollection } from '../../hooks/useCollection'
-import AdminTable, { type Column } from '../../components/admin/components/AdminTable'
-import AdminFormModal from '../../components/admin/modals/AdminFormModal'
 import type { Artwork } from '../../types'
+import AdminTable, { type Column } from '../../components/admin/components/AdminTable'
+import AdminModal from '../../components/admin/modals/AdminModal'
+import { useToast } from '../../components/admin/components/AdminToast'
+import { uploadImage } from '../../services/storage'
+import { Icon } from '@iconify/react'
 
-const columns: Column<Artwork>[] = [
-  { key: 'title', label: 'Title' },
-  { key: 'medium', label: 'Medium' },
-  { key: 'updatedAt', label: 'Updated', render: (v: any) => new Date(v as number).toLocaleDateString() },
-]
-
-const formFields = [
-  { key: 'title', label: 'Title', required: true },
-  { key: 'imageURL', label: 'Image URL', type: 'url' as const, required: true },
-  { key: 'medium', label: 'Medium', required: true },
-  { key: 'story', label: 'Story', type: 'textarea' as const, required: true },
-]
+const defaultFormData: Omit<Artwork, 'id' | 'createdAt' | 'updatedAt'> = {
+  title: '',
+  medium: '',
+  image: ''
+}
 
 export default function AdminArtPage() {
   const { items, loading, addItem, updateItem, removeItem } = useCollection<Artwork>('artworks')
-  const [editing, setEditing] = useState<(Artwork & { id: string }) | null>(null)
-  const [showForm, setShowForm] = useState(false)
+  const { addToast } = useToast()
+  
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [formData, setFormData] = useState(defaultFormData)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  
+  const [uploadingImage, setUploadingImage] = useState(false)
 
-  function parseForm(data: Record<string, unknown>) {
-    return {
-      title: String(data.title),
-      imageURL: String(data.imageURL),
-      medium: String(data.medium),
-      story: String(data.story),
-    } as Omit<Artwork, 'id' | 'createdAt' | 'updatedAt'>
+  const columns: Column<Artwork>[] = [
+    { 
+      key: 'image', 
+      label: 'Image',
+      render: (val) => val ? <img src={val} alt="artwork" className="w-12 h-12 object-cover rounded-md" /> : null,
+      sortable: false
+    },
+    { key: 'title', label: 'Title' },
+    { key: 'medium', label: 'Medium' }
+  ]
+
+  const handleAdd = () => {
+    setEditingId(null)
+    setFormData(defaultFormData)
+    setIsModalOpen(true)
   }
 
-  async function handleAdd(data: Record<string, unknown>) {
-    await addItem(parseForm(data))
+  const handleEdit = (item: Artwork & { id: string }) => {
+    setEditingId(item.id)
+    setFormData({
+      title: item.title || '',
+      medium: item.medium || '',
+      image: item.image || ''
+    })
+    setIsModalOpen(true)
   }
 
-  async function handleEdit(data: Record<string, unknown>) {
-    if (!editing) return
-    await updateItem(editing.id, parseForm(data) as Partial<Artwork>)
-    setEditing(null)
+  const handleDelete = async (item: Artwork & { id: string }) => {
+    try {
+      await removeItem(item.id)
+      addToast('Artwork deleted successfully', 'success')
+    } catch (err: any) {
+      addToast(err.message || 'Failed to delete', 'error')
+    }
   }
 
-  async function handleDelete(item: Artwork & { id: string }) {
-    await removeItem(item.id)
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploadingImage(true)
+    try {
+      const stored = await uploadImage(file, `art_${Date.now()}_${file.name}`)
+      setFormData(prev => ({ ...prev, image: stored.url }))
+      addToast('Image uploaded', 'success')
+    } catch (err: any) {
+      addToast(err.message || 'Image upload failed', 'error')
+    } finally {
+      setUploadingImage(false)
+    }
   }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    
+    try {
+      if (editingId) {
+        await updateItem(editingId, formData)
+        addToast('Artwork updated successfully', 'success')
+      } else {
+        await addItem(formData)
+        addToast('Artwork added successfully', 'success')
+      }
+      setIsModalOpen(false)
+    } catch (err: any) {
+      addToast(err.message || 'Failed to save', 'error')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const isFormValid = formData.title.trim() && formData.image.trim()
 
   return (
-    <div>
-      <h1 className="mb-6 text-lg font-medium text-white">Artworks</h1>
+    <div className="flex flex-col gap-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold tracking-tight text-white">Artworks</h1>
+      </div>
+
       <AdminTable
         columns={columns}
         data={items}
         loading={loading}
-        onEdit={(item: any) => { setEditing(item); setShowForm(true) }}
+        onAdd={handleAdd}
+        onEdit={handleEdit}
         onDelete={handleDelete}
-        onAdd={() => { setEditing(null); setShowForm(true) }}
+        defaultSortKey="title"
       />
 
-      <AdminFormModal
-        isOpen={showForm}
-        onClose={() => { setShowForm(false); setEditing(null) }}
-        onSubmit={editing ? handleEdit : handleAdd}
-        fields={formFields}
-        initialData={editing ? { ...editing } : null}
-        title={editing ? 'Edit Artwork' : 'Add Artwork'}
-      />
+      <AdminModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title={editingId ? 'Edit Artwork' : 'Add Artwork'}
+      >
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-semibold uppercase tracking-wider text-gray-400">Image Upload <span className="text-red-500">*</span></label>
+            <div className="flex items-center gap-4">
+              {formData.image && (
+                <img src={formData.image} alt="preview" className="w-20 h-20 object-cover rounded-lg border border-white/10" />
+              )}
+              <div className="flex flex-col gap-2 flex-1">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="hidden"
+                  id="art-image-upload"
+                  disabled={uploadingImage}
+                />
+                <label 
+                  htmlFor="art-image-upload"
+                  className={`flex items-center justify-center gap-2 border border-white/20 rounded-xl px-4 py-3 text-sm cursor-pointer transition-colors ${uploadingImage ? 'opacity-50' : 'hover:bg-white/5'}`}
+                >
+                  <Icon icon={uploadingImage ? 'lucide:loader-2' : 'lucide:upload'} className={uploadingImage ? 'animate-spin' : ''} />
+                  {uploadingImage ? 'Uploading...' : 'Choose Image'}
+                </label>
+                <input
+                  type="text"
+                  value={formData.image}
+                  onChange={e => setFormData({ ...formData, image: e.target.value })}
+                  placeholder="Or paste image URL directly..."
+                  className="w-full bg-gray-900 border border-white/10 rounded-xl px-4 py-2 text-sm outline-none focus:border-purple-500/50 transition-colors"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-1.5 mt-2">
+            <label className="text-xs font-semibold uppercase tracking-wider text-gray-400">Title <span className="text-red-500">*</span></label>
+            <input
+              type="text"
+              required
+              value={formData.title}
+              onChange={e => setFormData({ ...formData, title: e.target.value })}
+              className="w-full bg-gray-900 border border-white/10 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-purple-500/50 transition-colors"
+            />
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-semibold uppercase tracking-wider text-gray-400">Medium</label>
+            <input
+              type="text"
+              value={formData.medium}
+              onChange={e => setFormData({ ...formData, medium: e.target.value })}
+              className="w-full bg-gray-900 border border-white/10 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-purple-500/50 transition-colors"
+              placeholder="e.g. Digital Art, Oil on Canvas"
+            />
+          </div>
+
+          <div className="flex justify-end gap-3 mt-4 pt-4 border-t border-white/10">
+            <button
+              type="button"
+              onClick={() => setIsModalOpen(false)}
+              className="px-4 py-2 text-sm font-medium text-white/50 hover:text-white transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={!isFormValid || isSubmitting || uploadingImage}
+              className="px-6 py-2 text-sm font-medium bg-purple-600 hover:bg-purple-500 disabled:bg-gray-800 disabled:text-gray-500 text-white rounded-xl transition-colors"
+            >
+              {isSubmitting ? 'Saving...' : editingId ? 'Update' : 'Save'}
+            </button>
+          </div>
+        </form>
+      </AdminModal>
     </div>
   )
 }

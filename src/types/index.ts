@@ -6,6 +6,7 @@ export interface User {
 
 export interface Project {
   id: string
+  order: number
   title: string
   tagline: string
   description: string
@@ -14,86 +15,51 @@ export interface Project {
   images?: string[]
   githubLink: string
   liveUrl?: string
-  figmaUrl?: string
-  isFeatured: boolean
-  createdAt: number
-  updatedAt: number
+  createdAt?: number
+  updatedAt?: number
 }
 
 export interface Experience {
   id: string
+  order: number
   role: string
   company: string
-  timeline: { start: string; end?: string }
+  startMonth: string
+  startYear: string
+  endMonth?: string
+  endYear?: string
   description: string
-  technologies: string[]
-  createdAt: number
-  updatedAt: number
+  skillsAcquired: string[]
+  createdAt?: number
+  updatedAt?: number
+}
+
+export interface SkillCategory {
+  id: string
+  name: string
+  classification: 'technical' | 'professional'
+  createdAt?: number
+  updatedAt?: number
 }
 
 export interface Skill {
   id: string
   name: string
-  category: string
-  yearsOfExperience: number
-  confidence: number
+  categoryId: string
   icon: string
-  createdAt: number
-  updatedAt: number
+  createdAt?: number
+  updatedAt?: number
 }
 
 export interface Artwork {
   id: string
   title: string
-  imageURL: string
+  image: string
   medium: string
-  story: string
-  createdAt: number
-  updatedAt: number
+  story?: string
+  createdAt?: number
+  updatedAt?: number
 }
-
-export interface LibraryItem {
-  id: string
-  title: string
-  url: string
-  category: 'book' | 'article' | 'video' | 'tool'
-  tags: string[]
-}
-
-export interface MockSkill {
-  id: string
-  name: string
-  category: string
-  yearsOfExperience: number
-  confidence: number
-  icon: string
-}
-
-export interface MockJournalEntry {
-  title: string
-  body: string
-  signature: string
-}
-
-export interface MockProject {
-  id: string
-  title: string
-  tagline: string
-  description: string
-  techStack: string[]
-  coverImage: string
-  githubLink: string
-}
-
-export interface MockArtwork {
-  id: string
-  title: string
-  imageURL: string
-  medium: string
-  story: string
-}
-
-
 
 export interface Certificate {
   id: string
@@ -104,4 +70,85 @@ export interface Certificate {
   category?: string
   verificationUrl?: string
   image: string
+  createdAt?: number
+  updatedAt?: number
+}
+
+export interface ContactInfo {
+  id: string
+  email: string
+  phone: string
+  github: string
+  linkedin: string
+  facebook: string
+  instagram: string
+  updatedAt?: number
+}
+
+export interface LibraryItem {
+  id: string
+  title: string
+  url: string
+  category: 'book' | 'article' | 'video' | 'tool'
+  tags: string[]
+}
+
+// Keep the mock interfaces as they are used in the components until we fully connect Firebase
+export interface MockSkill {
+  id: string
+  name: string
+  categoryId: string
+  icon: string
+  createdAt?: number
+  updatedAt?: number
+}
+
+export interface MockJournalEntry {
+  title: string
+  body: string
+  signature: string
+  createdAt?: number
+  updatedAt?: number
+}
+
+export interface MockProject {
+  id: string
+  order?: number
+  title: string
+  tagline: string
+  description: string
+  techStack: string[]
+  coverImage: string
+  githubLink: string
+  figmaUrl?: string
+  isFeatured?: boolean
+  images?: string[]
+  liveUrl?: string
+  createdAt?: number
+  updatedAt?: number
+}
+
+export interface MockArtwork {
+  id: string
+  title: string
+  image: string
+  medium: string
+  story: string
+  createdAt?: number
+  updatedAt?: number
+}
+
+export interface MockExperience {
+  id: string
+  order?: number
+  role: string
+  company: string
+  startMonth: string
+  startYear: string
+  endMonth?: string
+  endYear?: string
+  description: string
+  skillsAcquired: string[]
+  createdAt?: number
+  updatedAt?: number
 }

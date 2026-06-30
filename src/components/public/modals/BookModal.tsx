@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Icon } from '@iconify/react'
-import type { Project } from '../../../types'
+import type { MockProject as Project } from '../../../types'
 import ImageViewer from '../components/ImageViewer'
 
 interface BookModalProps {

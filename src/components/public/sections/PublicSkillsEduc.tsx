@@ -3,8 +3,8 @@ import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Icon } from '@iconify/react'
 import { useCollection } from '../../../hooks/useCollection'
+import type { Skill, SkillCategory } from '../../../types'
 import { mockSkills } from '../../../data/portfolioData'
-import type { Skill } from '../../../types'
 import { Fireflies, FloatingPetal } from '../../ui/Particles'
 
 const BOOK_COLORS = [
@@ -194,13 +194,34 @@ function WallDiplomas() {
 }
 
 export default function PublicSkillsEduc() {
-  const { items: skills, loading } = useCollection<Skill>('skills')
+  const { items: dbSkills, loading: skillsLoading } = useCollection<Skill>('skills')
+  const { items: categories, loading: catsLoading } = useCollection<SkillCategory>('skillCategories')
   const [activeCategory, setActiveCategory] = useState<{ title: string, skills: Skill[] } | null>(null)
 
-  const displaySkills = (skills.length > 0 ? skills : mockSkills) as unknown as Skill[]
+  const loading = skillsLoading || catsLoading
+  const displaySkills = dbSkills.length > 0 ? dbSkills : mockSkills
 
-  const technicalSkills = displaySkills.filter(s => s.category !== 'Professional')
-  const professionalSkills = displaySkills.filter(s => s.category === 'Professional')
+  // Map category IDs to names and classifications if they are Firebase skills
+  const skillsWithCategoryNames = displaySkills.map(skill => {
+    let catName = 'Unknown'
+    let catClass = 'technical'
+    if (skill.categoryId) {
+      const cat = categories.find(c => c.id === skill.categoryId)
+      if (cat) {
+        catName = cat.name
+        catClass = cat.classification || 'technical'
+      }
+    } else {
+      // For mock skills, guess based on name
+      const mockS = skill as any
+      catName = mockS.category || 'Unknown'
+      catClass = (catName === 'Professional' || catName === 'Soft Skills') ? 'professional' : 'technical'
+    }
+    return { ...skill, category: catName, classification: catClass } as Skill & { category: string, classification: string }
+  })
+
+  const technicalSkills = skillsWithCategoryNames.filter(s => s.classification === 'technical')
+  const professionalSkills = skillsWithCategoryNames.filter(s => s.classification === 'professional')
 
   const groupedTechSkills = technicalSkills.reduce((acc, skill) => {
     if (!acc[skill.category]) acc[skill.category] = []

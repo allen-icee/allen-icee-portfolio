@@ -1,0 +1,33 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Helper function to validate file size (5MB = 5 * 1024 * 1024 bytes)
+    function isLessThan5MB() {
+      return request.resource.size < 5 * 1024 * 1024;
+    }
+
+    // Helper function to validate allowed content types (images or PDF)
+    function isValidContentType() {
+      return request.resource.contentType.matches('image/.*') || 
+             request.resource.contentType == 'application/pdf';
+    }
+
+    match /{allPaths=**} {
+      // Public can read any uploaded file
+      allow read: if true;
+      
+      // Only authenticated admins can upload/delete
+      // and new uploads must be valid size/type
+      allow write: if isAuthenticated() && (
+        request.resource == null || (isLessThan5MB() && isValidContentType())
+      );
+    }
+  }
+}
