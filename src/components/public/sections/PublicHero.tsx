@@ -56,7 +56,7 @@ function FloatingOrigami({ className }: { className?: string }) {
 
     const moveBird = () => {
       setPos(prev => {
-        let isIdle = Math.random() > 0.6; 
+        let isIdle = Math.random() > 0.6;
 
         if (prev.x < -10 || prev.x > 110) {
           isIdle = false;
@@ -91,7 +91,7 @@ function FloatingOrigami({ className }: { className?: string }) {
             if (newX < -20) newX = -20;
           }
 
-          let dyBase = (Math.random() - 0.5) * 30; 
+          let dyBase = (Math.random() - 0.5) * 30;
           let newY = prev.y + dyBase;
           if (newY < 5) newY = 5;
           if (newY > 75) newY = 75;
@@ -214,7 +214,7 @@ export default function PublicHero() {
         clearInterval(interval)
         setIsTyping(false)
       }
-    }, 40) 
+    }, 40)
 
     return () => clearInterval(interval)
   }, [quote])
@@ -308,9 +308,9 @@ export default function PublicHero() {
             transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
             style={{ perspective: 1000 }}
           >
-            What Makes<br />
-            <span className="italic font-light text-transparent bg-clip-text bg-gradient-to-br from-purple-brand via-charcoal to-[#8c6b5d] dark:from-lavender dark:via-white dark:to-[#b19cd9] drop-shadow-[0_0_25px_rgba(107,76,154,0.2)] dark:drop-shadow-[0_0_25px_rgba(230,230,250,0.4)] relative inline-block mt-2 md:mt-0 pr-6">
-              You, You?
+            Ice with an E;<br />
+            <span className="italic font-light text-transparent bg-clip-text bg-gradient-to-br from-purple-brand via-charcoal to-[#8c6b5d] dark:from-lavender dark:via-white dark:to-[#b19cd9] drop-shadow-[0_0_25px_rgba(107,76,154,0.2)] dark:drop-shadow-[0_0_25px_rgba(230,230,250,0.4)] relative inline-block mt-2 md:mt-0 pr-6 pb-2 md:pb-4">
+              The Brevity of Me
             </span>
           </motion.h1>
         </div>
