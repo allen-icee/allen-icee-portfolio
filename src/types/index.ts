@@ -66,6 +66,7 @@ export interface Certificate {
   title: string
   issuer: string
   date: string
+  endDate?: string
   credentialId?: string
   category?: string
   verificationUrl?: string

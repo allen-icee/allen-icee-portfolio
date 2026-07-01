@@ -160,6 +160,17 @@ export default function CertModal({ certificate, onClose }: CertModalProps) {
                       </p>
                     </div>
 
+                    {certificate.endDate && (
+                      <div>
+                        <p className="font-sans text-[9px] md:text-[10px] uppercase tracking-[0.2em] text-charcoal/40 dark:text-white/40 mb-1.5 md:mb-2">
+                          Expiration Date
+                        </p>
+                        <p className="font-serif text-base md:text-2xl text-charcoal/90 dark:text-white/90">
+                          {certificate.endDate}
+                        </p>
+                      </div>
+                    )}
+
                     {certificate.credentialId && (
                       <div>
                         <p className="font-sans text-[9px] md:text-[10px] uppercase tracking-[0.2em] text-charcoal/40 dark:text-white/40 mb-1.5 md:mb-2">

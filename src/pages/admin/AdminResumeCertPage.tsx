@@ -14,6 +14,7 @@ const defaultFormData: Omit<Certificate, 'id' | 'createdAt' | 'updatedAt'> = {
   title: '',
   issuer: '',
   date: '',
+  endDate: '',
   credentialId: '',
   category: '',
   verificationUrl: '',
@@ -22,6 +23,7 @@ const defaultFormData: Omit<Certificate, 'id' | 'createdAt' | 'updatedAt'> = {
 
 export default function AdminResumeCertPage() {
   const { items, loading, addItem, updateItem, removeItem } = useCollection<Certificate>('certificates')
+  const sortedItems = [...items].sort((a, b) => a.title.localeCompare(b.title))
   const { addToast } = useToast()
   
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -171,12 +173,11 @@ export default function AdminResumeCertPage() {
 
         <AdminTable
           columns={columns}
-          data={items}
+          data={sortedItems}
           loading={loading}
           onAdd={handleAdd}
           onEdit={handleEdit}
           onDelete={handleDelete}
-          defaultSortKey="date"
         />
       </div>
 
@@ -244,16 +245,29 @@ export default function AdminResumeCertPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold uppercase tracking-wider text-gray-400">Date (Month Year) <span className="text-red-500">*</span></label>
+              <label className="text-xs font-semibold uppercase tracking-wider text-gray-400">Issue Date (Month Year) <span className="text-red-500">*</span></label>
               <input
                 type="text"
                 required
                 value={formData.date}
                 onChange={e => setFormData({ ...formData, date: e.target.value })}
                 className="w-full bg-gray-900 border border-white/10 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-purple-500/50 transition-colors"
-                placeholder="e.g. October 2023"
+                placeholder="e.g. Jan 2024"
               />
             </div>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-semibold uppercase tracking-wider text-gray-400">Expiration Date (Month Year)</label>
+              <input
+                type="text"
+                value={formData.endDate || ''}
+                onChange={e => setFormData({ ...formData, endDate: e.target.value })}
+                className="w-full bg-gray-900 border border-white/10 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-purple-500/50 transition-colors"
+                placeholder="Leave empty if it does not expire"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-semibold uppercase tracking-wider text-gray-400">Category</label>
               <input

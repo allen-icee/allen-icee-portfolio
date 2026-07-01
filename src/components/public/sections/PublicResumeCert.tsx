@@ -28,7 +28,9 @@ export default function PublicResumeCert() {
       .catch(() => setResumeUrl('/placeholder-resume.pdf'))
   }, [])
 
-  const certificates = dbCerts.length > 0 ? dbCerts : mockCertificates
+  const dbCertsSorted = [...dbCerts].sort((a, b) => a.title.localeCompare(b.title))
+  const mockCertsSorted = [...mockCertificates].sort((a, b) => a.title.localeCompare(b.title))
+  const certificates = dbCerts.length > 0 ? dbCertsSorted : mockCertsSorted
 
   return (
     <>
