@@ -60,5 +60,10 @@ If you'd like to clone and run this project locally, you will need to set up you
    npm run dev
    ```
 
-## 📄 License
-This project is for personal portfolio use. If you would like to use portions of the code, feel free, but please do not copy the personal branding, digital artwork, or content.
+## 📄 License & Copyright
+
+**© 2026 Allen Icee Dequiros. All Rights Reserved.**
+
+This repository is strictly for viewing purposes to showcase my professional portfolio and coding abilities to recruiters and fellow developers. 
+
+You are welcome to view the code and use the live website as inspiration for your own projects, but **you may NOT clone, copy, fork, distribute, or reuse any part of this code, digital artwork, personal branding, or assets for any purpose.**
