@@ -85,34 +85,50 @@ export default function PublicArtGallery() {
   const images = artworks.map((a) => a.image)
 
   const curatedColumns = useMemo(() => {
+    // 1. Build a pool with weighted frequencies
+    const pool: { artwork: Artwork; originalIndex: number }[] = []
+    
+    artworks.forEach((artwork, index) => {
+      // Everyone gets added at least once
+      pool.push({ artwork, originalIndex: index })
+      
+      const title = artwork.title.toUpperCase()
+      // If the title contains special keywords, add it 2 extra times!
+      if (title.includes('MS.') || title.includes('MARIA') || title.includes('DEAREST')) {
+        pool.push({ artwork, originalIndex: index })
+        pool.push({ artwork, originalIndex: index })
+      }
+    })
+
+    // 2. Shuffle the pool randomly (Fisher-Yates algorithm)
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+
+    // 3. Build the alternating columns from the randomized pool
     const cols: { type: 'single' | 'stacked'; items: { artwork: Artwork; originalIndex: number }[] }[] = []
     let i = 0
     let patternStep = 0
-    while (i < artworks.length) {
+    while (i < pool.length) {
       if (patternStep % 2 === 0) {
-
-        if (i + 1 < artworks.length) {
+        if (i + 1 < pool.length) {
           cols.push({
             type: 'stacked',
-            items: [
-              { artwork: artworks[i], originalIndex: i },
-              { artwork: artworks[i + 1], originalIndex: i + 1 }
-            ]
+            items: [pool[i], pool[i + 1]]
           })
           i += 2
         } else {
-
           cols.push({
             type: 'single',
-            items: [{ artwork: artworks[i], originalIndex: i }]
+            items: [pool[i]]
           })
           i += 1
         }
       } else {
-
         cols.push({
           type: 'single',
-          items: [{ artwork: artworks[i], originalIndex: i }]
+          items: [pool[i]]
         })
         i += 1
       }
