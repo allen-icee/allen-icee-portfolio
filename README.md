@@ -1,69 +1,88 @@
-# Allen Icee Dequiros - Developer Portfolio & Digital Art Gallery
+# Allen Icee Dequiros Portfolio
 
-Welcome to the source code for my personal developer portfolio! 
-
-This is a highly optimized, fully custom-built web application designed to showcase my journey as a software engineer, UI/UX designer, and digital artist. 
-
-🔗 **Live Website:** [https://allen-icee.vercel.app](https://allen-icee.vercel.app)
+This is a modern, interactive, and highly stylized personal portfolio web application. It serves as a digital showcase for recruiters, clients, and fellow developers to explore my professional experience, projects, and certifications. The project solves the problem of presenting technical work in a creative, engaging, and premium format rather than a standard static resume.
 
 ---
 
 ## ✨ Features
 
-- 🎨 **Interactive Art Gallery:** A dynamic, randomized gallery featuring my digital artwork. It includes a custom weighted-shuffling algorithm to subliminally feature specific pieces and custom CSS glass-pane overlays.
-- 🖥️ **Virtual Desk Environment:** A creative, interactive "Desk" experience for the About section, featuring clickable items with subtle micro-animations and sound design.
-- 🔐 **Custom CMS (Admin Dashboard):** A fully authenticated, private admin panel built directly into the site. It allows me to effortlessly add, edit, or delete Projects, Artworks, and Certificates on the fly without ever touching the source code.
-- 🖼️ **Automated Image Optimization:** The admin dashboard includes built-in client-side image compression, instantly shrinking 15MB+ original master artworks down to highly optimized WebP formats before uploading them to the database.
-- 🛡️ **Enterprise Security:** The backend is completely locked down using Google reCAPTCHA v3, Firebase App Check, and strict Firestore Security Rules. Only authorized domains can access the database, and only the admin account can write to it.
-- ⚡ **Extremely Fast:** Built on Vite, utilizing `framer-motion` for buttery smooth 60fps animations and lazy-loading for heavy assets.
+- Interactive 3D elements and parallax animations using Framer Motion and Three.js.
+- Fully responsive design with mobile-optimized layouts, modals, and navigation.
+- Dynamic project shelves and experience timelines powered by Firebase Firestore.
+- Interactive digital resume with a built-in music player and native PDF rendering.
+- Secure, authenticated admin dashboard for real-time content management (CMS).
 
-## 🛠️ Tech Stack
+---
 
-- **Frontend Framework:** React 18 (TypeScript)
-- **Build Tool:** Vite
-- **Styling:** Tailwind CSS + Vanilla CSS Customizations
-- **Animations:** Framer Motion
-- **Backend/Database:** Firebase (Firestore, Firebase Storage, Firebase Auth)
-- **Security:** Firebase App Check & reCAPTCHA v3
-- **Image Compression:** `browser-image-compression`
-- **Deployment:** Vercel
+<h3>Languages & Tools (⌐■_■)</h3>
 
-## 🚀 Getting Started (Local Development)
+<p align="left">
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" width="35" title="React"/>
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg" width="35" title="TypeScript"/>
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" width="35" title="Tailwind CSS"/>
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/firebase/firebase-plain.svg" width="35" title="Firebase"/>
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/threejs/threejs-original.svg" width="35" title="Three.js"/>
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vitejs/vitejs-original.svg" width="35" title="Vite"/>
+</p>
 
-If you'd like to clone and run this project locally, you will need to set up your own Firebase instance.
+---
 
-1. **Clone the repository:**
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js (v18 or higher)
+- npm or yarn
+- A Firebase project with Firestore, Storage, and Authentication enabled
+
+### Installation
+
+1. Clone the repository:
    ```bash
    git clone https://github.com/allen-icee/allen-icee-portfolio.git
+   ```
+2. Navigate into the project directory:
+   ```bash
    cd allen-icee-portfolio
    ```
-
-2. **Install dependencies:**
+3. Install dependencies:
    ```bash
    npm install
    ```
 
-3. **Environment Variables:**
-   Create a `.env` file in the root directory and add your Firebase credentials:
-   ```env
-   VITE_FIREBASE_API_KEY="your-api-key"
-   VITE_FIREBASE_AUTH_DOMAIN="your-auth-domain"
-   VITE_FIREBASE_PROJECT_ID="your-project-id"
-   VITE_FIREBASE_STORAGE_BUCKET="your-storage-bucket"
-   VITE_FIREBASE_MESSAGING_SENDER_ID="your-sender-id"
-   VITE_FIREBASE_APP_ID="your-app-id"
-   VITE_RECAPTCHA_SITE_KEY="your-recaptcha-key"
-   ```
+### Environment Variables
 
-4. **Run the development server:**
-   ```bash
-   npm run dev
-   ```
+Create a `.env` file in the root directory and add the following Firebase configuration variables:
 
-## 📄 License & Copyright
+```env
+VITE_FIREBASE_API_KEY=your_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_auth_domain
+VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_storage_bucket
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
+VITE_FIREBASE_APP_ID=your_app_id
+```
 
-**© 2026 Allen Icee Dequiros. All Rights Reserved.**
+### Run
 
-This repository is strictly for viewing purposes to showcase my professional portfolio and coding abilities to recruiters and fellow developers. 
+Start the development server:
 
-You are welcome to view the code and use the live website as inspiration for your own projects, but **you may NOT clone, copy, fork, distribute, or reuse any part of this code, digital artwork, personal branding, or assets for any purpose.**
+```bash
+npm run dev
+```
+
+---
+
+## 📄 License
+
+Copyright (c) 2026 Allen Icee Dequiros
+
+This project is shared for portfolio, educational, and learning purposes.
+
+You are welcome to study the codebase and use it as inspiration for your own projects.
+
+Copying substantial portions of this project, redistributing it, submitting it as your own work, or creating direct clones is not permitted without explicit permission.
+
+If this project inspires your work, please build your own implementation rather than copying the source code.
+
+All rights reserved.
