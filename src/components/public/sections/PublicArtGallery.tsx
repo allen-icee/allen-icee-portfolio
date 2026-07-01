@@ -51,7 +51,11 @@ const ArtCard = memo(function ArtCard({
           <div className={`relative shadow-[inset_0_0_4px_rgba(0,0,0,0.2)] ${sizeClass} bg-black/5 dark:bg-black/10 overflow-hidden`}>
             <OptimizedImage src={artwork.image} alt={artwork.title} className="w-full h-auto object-cover" skeletonClassName="bg-black/10 dark:bg-white/10" />
 
-            <div className="pointer-events-none absolute inset-0 mix-blend-multiply opacity-[0.03] dark:opacity-[0.05]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\\\'0 0 200 200\\\' xmlns=\\\'http://www.w3.org/2000/svg\\\'%3E%3Cfilter id=\\\'noise\\\'%3E%3CfeTurbulence type=\\\'fractalNoise\\\' baseFrequency=\\\'1.5\\\' numOctaves=\\\'3\\\' stitchTiles=\\\'stitch\\\'/%3E%3C/filter%3E%3Crect width=\\\'100%25\\\' height=\\\'100%25\\\' filter=\\\'url(%23noise)\\\'/%3E%3C/svg%3E")' }} />
+            {/* Glass glare effect */}
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-transparent via-transparent to-white/20 dark:to-white/15 mix-blend-overlay" />
+            <div className="pointer-events-none absolute -inset-[100%] bg-gradient-to-br from-transparent via-white/10 to-transparent rotate-45 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out" />
+            {/* Inner shadow to mimic glass depth */}
+            <div className="pointer-events-none absolute inset-0 shadow-[inset_0_0_10px_rgba(0,0,0,0.2)] dark:shadow-[inset_0_0_15px_rgba(0,0,0,0.5)] border border-white/10" />
           </div>
         </div>
       </div>
