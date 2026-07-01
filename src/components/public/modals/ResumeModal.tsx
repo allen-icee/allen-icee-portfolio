@@ -70,7 +70,7 @@ export default function ResumeModal({ isOpen, onClose, resumeUrl }: ResumeModalP
             role="dialog"
             aria-modal="true"
             aria-labelledby="resume-modal-title"
-            className={`relative z-10 flex flex-col overflow-hidden bg-[#EAE5D9] dark:bg-[#1E1E1E] shadow-[0_30px_60px_rgba(0,0,0,0.8)] outline-none ring-1 ring-white/20 transition-all duration-500 ease-in-out ${isFullscreen ? 'h-[100vh] w-[100vw] rounded-none' : 'h-[95vh] max-h-[1000px] w-full max-w-5xl rounded-xl'
+            className={`relative z-10 flex flex-col overflow-hidden bg-[#EAE5D9] dark:bg-[#1E1E1E] shadow-[0_30px_60px_rgba(0,0,0,0.8)] outline-none ring-1 ring-white/20 transition-all duration-500 ease-in-out ${isFullscreen ? 'h-[100svh] w-[100vw] rounded-none' : 'h-[95svh] max-h-[1000px] w-full max-w-5xl rounded-xl'
               }`}
             initial={{ scale: 0.95, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
@@ -82,17 +82,17 @@ export default function ResumeModal({ isOpen, onClose, resumeUrl }: ResumeModalP
 
               <div className="absolute inset-0 opacity-[0.2] mix-blend-overlay pointer-events-none" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\\\'0 0 200 200\\\' xmlns=\\\'http://www.w3.org/2000/svg\\\'%3E%3Cfilter id=\\\'noise\\\'%3E%3CfeTurbulence type=\\\'fractalNoise\\\' baseFrequency=\\\'3\\\' numOctaves=\\\'2\\\' stitchTiles=\\\'stitch\\\'/%3E%3C/filter%3E%3Crect width=\\\'100%25\\\' height=\\\'100%25\\\' filter=\\\'url(%23noise)\\\'/%3E%3C/svg%3E")' }} />
 
-              <div className="flex items-center gap-4 relative z-10">
+              <div className="flex items-center gap-2 sm:gap-4 relative z-10 min-w-0">
 
                 <div className="flex items-center justify-center size-8 rounded-full bg-neutral-800 dark:bg-[#0a0a0a] shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]">
                   <div className="size-2.5 rounded-full bg-[#E84E1B] dark:bg-[#FF4500] shadow-[0_0_8px_#E84E1B] animate-pulse" />
                 </div>
 
-                <div>
-                  <h2 id="resume-modal-title" className="font-mono text-sm md:text-base font-bold tracking-widest uppercase text-neutral-900 dark:text-white drop-shadow-sm">
+                <div className="min-w-0">
+                  <h2 id="resume-modal-title" className="font-mono text-[10px] sm:text-sm md:text-base font-bold tracking-widest uppercase text-neutral-900 dark:text-white drop-shadow-sm truncate">
                     Allen Icee Dequiros
                   </h2>
-                  <p className="font-mono text-[9px] uppercase tracking-widest text-neutral-600 dark:text-neutral-400">
+                  <p className="font-mono text-[7px] sm:text-[9px] uppercase tracking-widest text-neutral-600 dark:text-neutral-400 truncate">
                     Track 2846: Resume
                   </p>
                 </div>
@@ -149,6 +149,11 @@ export default function ResumeModal({ isOpen, onClose, resumeUrl }: ResumeModalP
             </div>
 
             <div className="relative z-10 flex flex-1 flex-col bg-[#F9F6F0] dark:bg-[#121212] p-2 md:p-6 shadow-[inset_0_5px_20px_rgba(0,0,0,0.1)] dark:shadow-[inset_0_5px_20px_rgba(0,0,0,0.8)] overflow-hidden">
+              <div className="sm:hidden w-full text-center py-2 px-4 bg-[#EAE5D9] dark:bg-[#1a1a1a] border border-neutral-300 dark:border-white/10 rounded-sm mb-2 shadow-inner">
+                <p className="font-mono text-[8px] uppercase tracking-widest text-neutral-600 dark:text-neutral-400">
+                  For better reading on mobile, please use the <span className="text-[#E84E1B] font-bold">SAVE</span> button above.
+                </p>
+              </div>
               <div className="relative z-10 h-full w-full overflow-hidden rounded-sm bg-white shadow-xl ring-1 ring-neutral-200 dark:ring-[#333]">
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#F9F6F0] dark:bg-[#1a1a1a] p-6 text-center">
@@ -159,12 +164,14 @@ export default function ResumeModal({ isOpen, onClose, resumeUrl }: ResumeModalP
                   <p className="mt-2 text-xs font-mono text-neutral-500 dark:text-white/40 uppercase">If track fails, <a href={resumeUrl} download className="text-[#E84E1B] hover:underline">download audio here</a>.</p>
                 </div>
 
-                <iframe
-                  src={`${resumeUrl}#toolbar=0&navpanes=0&scrollbar=0`}
-                  title="Resume PDF"
-                  className="relative z-10 h-full w-full border-none bg-transparent"
-                  loading="lazy"
-                />
+                <div className="relative z-10 h-full w-full overflow-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
+                  <iframe
+                    src={`${resumeUrl}#toolbar=0&navpanes=0&scrollbar=0`}
+                    title="Resume PDF"
+                    className="relative z-10 h-full min-h-[100vh] sm:min-h-0 w-full border-none bg-transparent"
+                    loading="lazy"
+                  />
+                </div>
               </div>
             </div>
           </motion.div>

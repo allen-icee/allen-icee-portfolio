@@ -25,7 +25,7 @@ export default function AdminModal({ isOpen, onClose, title, children }: AdminMo
                 <Icon icon="lucide:x" className="w-5 h-5 opacity-60" />
               </button>
             </div>
-            <div className="p-6 max-h-[80vh] overflow-y-auto custom-scrollbar">
+            <div className="p-6 max-h-[80svh] overflow-y-auto custom-scrollbar">
               {children}
             </div>
           </motion.div>

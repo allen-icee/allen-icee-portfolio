@@ -133,14 +133,19 @@ export default function PublicProjects() {
 
   const projects = useMemo(() => {
     if (loading) return []
-    return dbProjects.length > 0 ? dbProjects : MOCK_PROJECTS
+    const baseProjects = dbProjects.length > 0 ? dbProjects : MOCK_PROJECTS
+    return [...baseProjects].sort((a, b) => a.title.localeCompare(b.title))
   }, [dbProjects, loading])
 
   const [chunkSize, setChunkSize] = useState(3)
+  const [isExpanded, setIsExpanded] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
     const handleResize = () => {
-      setChunkSize(window.innerWidth < 768 ? 2 : 3)
+      const mobile = window.innerWidth < 768
+      setIsMobile(mobile)
+      setChunkSize(mobile ? 2 : 3)
     }
 
     handleResize()
@@ -156,6 +161,11 @@ export default function PublicProjects() {
     }
     return chunked
   }, [projects, chunkSize])
+
+  const visibleRows = useMemo(() => {
+    if (isExpanded || !isMobile) return rows
+    return rows.slice(0, 2) // Show only 2 rows (4 projects) on mobile initially
+  }, [rows, isExpanded, isMobile])
 
   return (
     <section id="projects" className="relative overflow-hidden py-24 md:py-32 bg-transparent section-pattern-dots transition-colors duration-500">
@@ -175,7 +185,7 @@ export default function PublicProjects() {
             My Project Shelves
           </h2>
           <p className="font-sans text-xs md:text-sm tracking-widest uppercase text-purple-brand dark:text-purple-brand/90">
-            Things I built that I didn't f*ck up.
+            Things I built that made me look productive
           </p>
         </motion.div>
 
@@ -186,7 +196,7 @@ export default function PublicProjects() {
           </div>
         ) : (
           <div className="relative flex flex-col gap-y-16 md:gap-y-24">
-            {rows.map((row, rowIndex) => (
+            {visibleRows.map((row, rowIndex) => (
               <div key={rowIndex} className="relative w-full flex flex-col items-center">
 
                 <div className="relative z-20 w-full flex flex-wrap justify-center items-end gap-4 sm:gap-10 md:gap-16 pb-0 px-2 md:px-8">
@@ -220,6 +230,20 @@ export default function PublicProjects() {
 
               </div>
             ))}
+
+            {isMobile && rows.length > 2 && (
+              <div className="mt-8 flex justify-center w-full relative z-20">
+                <button
+                  onClick={() => setIsExpanded(!isExpanded)}
+                  className="group flex items-center gap-3 px-6 py-3 rounded-full border border-purple-brand/30 dark:border-lavender/30 bg-white/5 dark:bg-black/20 backdrop-blur-sm text-purple-brand dark:text-lavender hover:bg-purple-brand/10 dark:hover:bg-lavender/10 transition-all duration-300"
+                >
+                  <span className="font-mono text-[10px] uppercase tracking-widest font-bold">
+                    {isExpanded ? "Close Projects" : "Browse More Projects"}
+                  </span>
+                  <Icon icon={isExpanded ? "lucide:chevron-up" : "lucide:chevron-down"} className="size-4 group-hover:translate-y-0.5 transition-transform" />
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>

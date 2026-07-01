@@ -13,7 +13,7 @@ export interface Project {
   techStack: string[]
   coverImage: string
   images?: string[]
-  githubLink: string
+  githubLink?: string
   liveUrl?: string
   createdAt?: number
   updatedAt?: number
@@ -119,7 +119,7 @@ export interface MockProject {
   description: string
   techStack: string[]
   coverImage: string
-  githubLink: string
+  githubLink?: string
   figmaUrl?: string
   isFeatured?: boolean
   images?: string[]

@@ -1,5 +1,5 @@
 // src/components/public/sections/PublicResumeCert.tsx
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Icon } from '@iconify/react'
 import { Fireflies, FloatingPetal } from '../../ui/Particles'
@@ -9,7 +9,6 @@ import { Logo } from '../../ui/Logo'
 import { certificates as mockCertificates } from '../../../data/certificatesData'
 import { useCollection } from '../../../hooks/useCollection'
 import type { Certificate } from '../../../types'
-import { useEffect } from 'react'
 import { ref, getDownloadURL } from 'firebase/storage'
 import { storage } from '../../../services/firebaseConfig'
 
@@ -21,6 +20,35 @@ export default function PublicResumeCert() {
   const [selectedCertIndex, setSelectedCertIndex] = useState<number | null>(null)
   const [isResumeOpen, setIsResumeOpen] = useState(false)
   const [resumeUrl, setResumeUrl] = useState<string>('/placeholder-resume.pdf')
+  
+  const audioRef = useRef<HTMLAudioElement>(null)
+  const [isHovered, setIsHovered] = useState(false)
+  const [currentTrack, setCurrentTrack] = useState<string>('/audio/jazz.mp3')
+
+  const TRACKS = [
+    '/audio/ambient.mp3',
+    '/audio/cute.mp3',
+    '/audio/funky.mp3',
+    '/audio/jazz.mp3',
+    '/audio/jpop.mp3'
+  ]
+
+  const playRandomTrack = () => {
+    const randomTrack = TRACKS[Math.floor(Math.random() * TRACKS.length)]
+    setCurrentTrack(randomTrack)
+    setIsHovered(true)
+  }
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = 0.3 // Lower the volume to 30%
+      if (isHovered || isResumeOpen) {
+        audioRef.current.play().catch(e => console.log('Audio autoplay prevented:', e))
+      } else {
+        audioRef.current.pause()
+      }
+    }
+  }, [isHovered, isResumeOpen, currentTrack])
 
   useEffect(() => {
     getDownloadURL(ref(storage, 'images/resume.pdf'))
@@ -67,9 +95,18 @@ export default function PublicResumeCert() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
               >
-                <div className="relative overflow-visible group">
+                <div 
+                  className="relative overflow-visible group"
+                  onMouseEnter={playRandomTrack}
+                  onMouseLeave={() => setIsHovered(false)}
+                >
 
-                  <div className="absolute top-[2%] bottom-[2%] right-0 aspect-square rounded-full bg-[#111] dark:bg-black shadow-2xl transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:translate-x-[40%] md:group-hover:translate-x-[50%] flex items-center justify-center border border-white/10 z-0">
+                  <div 
+                    onClick={() => setIsResumeOpen(true)}
+                    role="button"
+                    tabIndex={0}
+                    className="absolute top-[2%] bottom-[2%] right-0 aspect-square rounded-full bg-[#111] dark:bg-black shadow-2xl transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:translate-x-[40%] md:group-hover:translate-x-[50%] flex items-center justify-center border border-white/10 z-0 cursor-pointer"
+                  >
 
                     <div className="w-full h-full rounded-full relative flex items-center justify-center group-hover:animate-[spin_4s_linear_infinite]">
 
@@ -213,6 +250,8 @@ export default function PublicResumeCert() {
         onClose={() => setIsResumeOpen(false)}
         resumeUrl={resumeUrl}
       />
+
+      <audio ref={audioRef} src={currentTrack} loop />
     </>
   )
 }

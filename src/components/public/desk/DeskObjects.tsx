@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 export function Keychain() {
   const playRoar = () => {
     const audio = new Audio('/sounds/roar.mp3')
+    audio.volume = 0.7
     audio.play().catch(e => console.error("Audio play failed, file might be missing", e))
   }
   return (

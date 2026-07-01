@@ -99,11 +99,24 @@ export default function AdminProjectsPage() {
     e.preventDefault()
     setIsSubmitting(true)
     
+    const parseFirebaseUrl = (url: string) => {
+      if (url.startsWith('gs://')) {
+        const withoutProtocol = url.replace('gs://', '');
+        const firstSlash = withoutProtocol.indexOf('/');
+        if (firstSlash !== -1) {
+          const bucket = withoutProtocol.substring(0, firstSlash);
+          const path = withoutProtocol.substring(firstSlash + 1);
+          return `https://firebasestorage.googleapis.com/v0/b/${bucket}/o/${encodeURIComponent(path)}?alt=media`;
+        }
+      }
+      return url;
+    };
+    
     try {
       const payload = {
         ...formData,
         techStack: techStackText.split(',').map(s => s.trim()).filter(s => s),
-        images: imagesText.split(',').map(s => s.trim()).filter(s => s)
+        images: imagesText.split(',').map(s => s.trim()).filter(s => s).map(parseFirebaseUrl)
       }
 
       if (editingId) {
@@ -136,7 +149,7 @@ export default function AdminProjectsPage() {
         onAdd={handleAdd}
         onEdit={handleEdit}
         onDelete={handleDelete}
-        defaultSortKey="order"
+        defaultSortKey="title"
       />
 
       <AdminModal

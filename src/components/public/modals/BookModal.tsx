@@ -15,7 +15,9 @@ export default function BookModal({ project, onClose }: BookModalProps) {
   const [viewerIndex, setViewerIndex] = useState<number | null>(null)
   const [activeImageIndex, setActiveImageIndex] = useState(0)
 
-  const images = project ? (project.images && project.images.length > 0 ? project.images : [project.coverImage]) : []
+  const rawImages = project?.images || []
+  const filteredImages = rawImages.filter(img => img !== project?.coverImage)
+  const images = project ? (filteredImages.length > 0 ? filteredImages : [project.coverImage]) : []
 
   useEffect(() => {
     setActiveImageIndex(0)
@@ -64,7 +66,7 @@ export default function BookModal({ project, onClose }: BookModalProps) {
                 aria-modal="true"
                 aria-labelledby="modal-title"
                 data-lenis-prevent="true"
-                className="relative z-10 flex max-h-[95vh] md:max-h-full w-full max-w-6xl flex-col overflow-y-auto md:overflow-hidden rounded-xl md:rounded-lg bg-[#FDFBF7] shadow-2xl outline-none dark:bg-[#1A181E] md:flex-row [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+                className="relative z-10 flex max-h-[95svh] md:max-h-[95svh] w-full max-w-6xl flex-col overflow-y-auto md:overflow-hidden rounded-xl md:rounded-lg bg-[#FDFBF7] shadow-2xl outline-none dark:bg-[#1A181E] md:flex-row [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
               initial={{ scale: 0.95, y: 20, opacity: 0 }}
               animate={{ scale: 1, y: 0, opacity: 1 }}
               exit={{ scale: 0.95, y: 20, opacity: 0 }}

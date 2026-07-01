@@ -10,7 +10,7 @@ import type { ContactInfo } from '../../../types'
 
 const socialLinks = [
   { platform: 'Email', username: 'alleniceedequiros@gmail.com', url: 'mailto:alleniceedequiros@gmail.com', qty: 1 },
-  { platform: 'GitHub', username: '@mr-dearest', url: 'https://github.com/mr-dearest', qty: 1 },
+  { platform: 'GitHub', username: '@allen-icee', url: 'https://github.com/allen-icee', qty: 1 },
   { platform: 'LinkedIn', username: 'in/allen-icee-dequiros/', url: 'https://www.linkedin.com/in/allen-icee-dequiros/', qty: 1 },
   { platform: 'Facebook', username: 'Allen Icee Dequiros', url: 'https://www.facebook.com/AllenIceeDequiros', qty: 1 },
   { platform: 'Instagram', username: '@allen_icee', url: 'https://www.instagram.com/allen_icee/', qty: 1 }
@@ -22,7 +22,7 @@ export default function PublicContactFooter() {
 
   const displayLinks = dbContact ? [
     { platform: 'Email', username: dbContact.email, url: `mailto:${dbContact.email}`, qty: 1 },
-    { platform: 'GitHub', username: dbContact.github?.replace('https://github.com/', '@') || '', url: dbContact.github, qty: 1 },
+    { platform: 'GitHub', username: '@allen-icee', url: 'https://github.com/allen-icee', qty: 1 },
     { platform: 'LinkedIn', username: dbContact.linkedin?.replace('https://www.linkedin.com/in/', 'in/') || '', url: dbContact.linkedin, qty: 1 },
     { platform: 'Facebook', username: dbContact.facebook?.split('.com/')[1]?.replace('/', '') || 'Facebook', url: dbContact.facebook, qty: 1 },
     { platform: 'Instagram', username: dbContact.instagram?.replace('https://www.instagram.com/', '@')?.replace('/', '') || '', url: dbContact.instagram, qty: 1 }
@@ -31,7 +31,7 @@ export default function PublicContactFooter() {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' })
   const [isSending, setIsSending] = useState(false)
   const [isSent, setIsSent] = useState(false)
-  
+
   const [, setAdminClickCount] = useState(0)
   const [showAdminLogin, setShowAdminLogin] = useState(false)
 
@@ -317,6 +317,10 @@ export default function PublicContactFooter() {
                 >
                   [ SCROLL TO TOP ]
                 </button>
+
+                <div className="mt-0 flex flex-col items-center opacity-10 hover:opacity-100 transition-opacity duration-300 text-[6px] max-w-[200px] text-center leading-tight tracking-tighter">
+                  <span>Audio: <a href="https://pixabay.com/users/desifreemusic-28163210" target="_blank" rel="noopener noreferrer" className="hover:underline">Omar Faruque</a>, <a href="https://pixabay.com/users/omnitrum-45628333" target="_blank" rel="noopener noreferrer" className="hover:underline">Omnitrum Music</a>, <a href="https://pixabay.com/users/djovan-36764943" target="_blank" rel="noopener noreferrer" className="hover:underline">omar sahel</a>, <a href="https://pixabay.com/users/koto-japan-soundtrack-54300444" target="_blank" rel="noopener noreferrer" className="hover:underline">NO COPYRIGHT ⭐⭐⭐⭐</a>, <a href="https://pixabay.com/users/geoffharvey-9096471" target="_blank" rel="noopener noreferrer" className="hover:underline">Geoff Harvey</a> via Pixabay.</span>
+                </div>
               </div>
 
             </div>

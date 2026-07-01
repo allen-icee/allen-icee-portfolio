@@ -165,6 +165,14 @@ export default function PublicHero() {
   const [isTyping, setIsTyping] = useState(false)
 
   const fetchQuote = useCallback(async () => {
+    const FALLBACK_QUOTES = [
+      '"Simplicity is the soul of efficiency." — Austin Freeman',
+      '"First, solve the problem. Then, write the code." — John Johnson',
+      '"Code is like humor. When you have to explain it, it’s bad." — Cory House',
+      '"Make it work, make it right, make it fast." — Kent Beck',
+      '"Before software can be reusable it first has to be usable." — Ralph Johnson'
+    ];
+
     try {
       let validQuote = false;
       let newQuote = "";
@@ -174,11 +182,11 @@ export default function PublicHero() {
 
       while (!validQuote && attempts < 5) {
         const res = await fetch('https://dummyjson.com/quotes/random')
+        if (!res.ok) throw new Error('API failed')
         const data = await res.json()
 
         if (data && data.quote) {
           const textLower = data.quote.toLowerCase()
-
           const hasFilteredWord = BAD_WORDS.some(word => textLower.includes(word))
 
           if (!hasFilteredWord) {
@@ -191,9 +199,13 @@ export default function PublicHero() {
 
       if (validQuote) {
         setQuote(newQuote)
+      } else {
+        throw new Error('Failed to find valid quote')
       }
     } catch (e) {
-      console.error(e)
+      // Silently fall back to a local quote if API fails (CORS, offline, etc.)
+      const randomFallback = FALLBACK_QUOTES[Math.floor(Math.random() * FALLBACK_QUOTES.length)];
+      setQuote(randomFallback);
     }
   }, [])
 
