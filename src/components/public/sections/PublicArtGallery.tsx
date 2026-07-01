@@ -40,7 +40,6 @@ const ArtCard = memo(function ArtCard({
         <div className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 w-[150%] h-[150%] bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.15),transparent_60%)] dark:bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.08),transparent_60%)] z-30 opacity-80 group-hover:opacity-100 transition-opacity duration-500" />
 
         <div className="absolute inset-0 border-t-[4px] border-l-[4px] border-b-[4px] border-r-[4px] md:border-t-[6px] md:border-l-[6px] md:border-b-[6px] md:border-r-[6px] border-t-[#593922] border-l-[#4a2f1b] border-r-[#2a1a0e] border-b-[#1c1109] dark:border-t-[#22160d] dark:border-l-[#191009] dark:border-r-[#0c0704] dark:border-b-[#050302] shadow-[inset_0_5px_10px_rgba(0,0,0,0.8)] pointer-events-none z-20">
-          <div className="absolute inset-0 opacity-[0.25] mix-blend-overlay" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\\\'0 0 200 200\\\' xmlns=\\\'http://www.w3.org/2000/svg\\\'%3E%3Cfilter id=\\\'noise\\\'%3E%3CfeTurbulence type=\\\'fractalNoise\\\' baseFrequency=\\\'0.4\\\' numOctaves=\\\'3\\\' stitchTiles=\\\'stitch\\\'/%3E%3C/filter%3E%3Crect width=\\\'100%25\\\' height=\\\'100%25\\\' filter=\\\'url(%23noise)\\\'/%3E%3C/svg%3E")' }} />
         </div>
 
         <div className="absolute inset-[4px] md:inset-[6px] shadow-[inset_0_2px_8px_rgba(0,0,0,0.6)] pointer-events-none z-20" />
@@ -50,13 +49,17 @@ const ArtCard = memo(function ArtCard({
 
           <div className={`relative shadow-[inset_0_0_4px_rgba(0,0,0,0.2)] ${sizeClass} bg-black/5 dark:bg-black/10 overflow-hidden`}>
             <OptimizedImage src={artwork.image} alt={artwork.title} className="w-full h-auto object-cover" skeletonClassName="bg-black/10 dark:bg-white/10" />
-
-            {/* Glass glare effect */}
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-transparent via-transparent to-white/20 dark:to-white/15 mix-blend-overlay" />
-            <div className="pointer-events-none absolute -inset-[100%] bg-gradient-to-br from-transparent via-white/10 to-transparent rotate-45 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out" />
-            {/* Inner shadow to mimic glass depth */}
-            <div className="pointer-events-none absolute inset-0 shadow-[inset_0_0_10px_rgba(0,0,0,0.2)] dark:shadow-[inset_0_0_15px_rgba(0,0,0,0.5)] border border-white/10" />
           </div>
+        </div>
+
+        {/* Real Static Glass Overlay (covering matting and image) */}
+        <div className="absolute inset-[4px] md:inset-[6px] pointer-events-none z-30 overflow-hidden mix-blend-screen">
+          {/* Overall soft reflection */}
+          <div className="absolute inset-0 bg-gradient-to-tr from-white/5 via-transparent to-white/20 dark:from-white/5 dark:to-white/10 opacity-70" />
+          {/* Sharp diagonal specular highlight */}
+          <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/10 to-transparent translate-x-1/4 -translate-y-1/4 rotate-45 opacity-60 scale-[1.5]" />
+          {/* Glass edge shadow/thickness */}
+          <div className="absolute inset-0 shadow-[inset_0_0_6px_rgba(0,0,0,0.5)] border border-white/20" />
         </div>
       </div>
 
