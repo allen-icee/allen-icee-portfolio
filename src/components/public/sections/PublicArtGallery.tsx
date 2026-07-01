@@ -159,7 +159,13 @@ export default function PublicArtGallery() {
             <div className="relative w-full pt-8 pb-32 md:pt-12 md:pb-48 flex items-center justify-center">
 
               <div className="w-full relative z-10 flex select-none py-4 md:py-8">
-                <div className="flex animate-gallery-marquee items-center" style={{ width: 'max-content' }}>
+                <div 
+                  className="flex animate-gallery-marquee items-center" 
+                  style={{ 
+                    width: 'max-content',
+                    animationDuration: `${Math.max(60, curatedColumns.length * 15)}s` 
+                  }}
+                >
 
                   {curatedColumns.map((col, colIndex) => (
                     <div key={`col1-${colIndex}`} className="flex flex-col justify-center px-2 md:px-4 h-[400px] md:h-[500px] lg:h-[600px]">
