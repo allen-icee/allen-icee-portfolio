@@ -4,12 +4,7 @@ import { Logo } from '../../ui/Logo'
 
 export default function SplashScreen() {
   const [isVisible, setIsVisible] = useState(true)
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
-
   useEffect(() => {
-    // Check reduced motion preference
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
-    setPrefersReducedMotion(mediaQuery.matches)
 
     // Prevent scrolling while splash is visible
     document.body.style.overflow = 'hidden'
