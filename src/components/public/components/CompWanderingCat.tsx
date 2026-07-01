@@ -276,6 +276,10 @@ function SingleCat({ config }: { config: CatConfig }) {
       }}
       onMouseEnter={() => {
         if (isDragging.current) return
+        
+        const audio = new Audio('/sounds/meow.mp3')
+        audio.play().catch(e => console.error("Audio play failed", e))
+
         isHovering.current = true
         state.current = 'restCurl'
         setBubble('(｡♥‿♥｡)')
