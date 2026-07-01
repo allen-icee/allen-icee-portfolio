@@ -14,7 +14,7 @@ const links = [
 ]
 
 export default function AdminSidebar() {
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
 
   return (
     <aside className="flex h-full flex-col">
@@ -43,7 +43,7 @@ export default function AdminSidebar() {
         ))}
       </nav>
 
-      <div className="border-t border-white/[0.06] px-5 py-4">
+      <div className="border-t border-white/[0.06] px-5 py-4 space-y-4">
         <NavLink
           to="/"
           className="flex items-center gap-2 text-xs text-white/30 transition-colors hover:text-white/50"
@@ -51,6 +51,13 @@ export default function AdminSidebar() {
           <Icon icon="lucide:arrow-left" className="size-3" />
           Back to site
         </NavLink>
+        <button
+          onClick={logout}
+          className="flex w-full items-center gap-2 text-xs text-red-400/60 transition-colors hover:text-red-400"
+        >
+          <Icon icon="lucide:log-out" className="size-3" />
+          Sign Out
+        </button>
       </div>
     </aside>
   )

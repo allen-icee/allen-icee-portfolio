@@ -1,5 +1,6 @@
 // src/pages/public/PublicProjectDetail.tsx
 import { useParams, useNavigate } from 'react-router-dom'
+import { Helmet } from 'react-helmet-async'
 import { motion } from 'framer-motion'
 import { Icon } from '@iconify/react'
 import { useCollection } from '../../hooks/useCollection'
@@ -47,6 +48,13 @@ export default function PublicProjectDetail() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
     >
+      <Helmet>
+        <title>{project.title} | Allen Icee Dequiros</title>
+        <meta name="description" content={project.description.slice(0, 150)} />
+        <meta property="og:title" content={`${project.title} | Allen Icee Dequiros`} />
+        <meta property="og:description" content={project.description.slice(0, 150)} />
+        {project.coverImage && <meta property="og:image" content={project.coverImage} />}
+      </Helmet>
 
       <motion.button
         onClick={() => navigate('/')}
@@ -57,7 +65,7 @@ export default function PublicProjectDetail() {
         transition={{ duration: 0.3 }}
       >
         <Icon icon="lucide:arrow-left" className="size-4" />
-        Back to Library
+        Back to Icee's World
       </motion.button>
 
       <div className="mb-12 flex flex-col gap-8 sm:flex-row">

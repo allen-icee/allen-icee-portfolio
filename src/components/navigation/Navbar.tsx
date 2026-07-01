@@ -112,7 +112,7 @@ export function Navbar() {
       <motion.header
         className={`fixed inset-x-0 top-0 z-40 mx-auto w-full max-w-[1200px] transition-all duration-400 ease-out ${
           isScrolled 
-            ? 'mt-4 md:rounded-2xl border-transparent md:border-charcoal/5 bg-transparent md:bg-warm-paper/90 px-6 py-3 md:shadow-sm md:backdrop-blur-md md:dark:border-white/10 md:dark:bg-surface/90 md:px-8'
+            ? 'mt-4 md:rounded-full border-transparent md:border-charcoal/10 bg-transparent md:bg-warm-paper/60 px-6 py-3 md:shadow-lg md:backdrop-blur-xl md:dark:border-white/10 md:dark:bg-surface/60 md:px-8'
             : 'mt-0 border-transparent bg-transparent px-6 py-6 md:px-8'
         }`}
         initial={{ y: -100, opacity: 0 }}

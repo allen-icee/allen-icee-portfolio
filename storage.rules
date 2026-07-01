@@ -3,9 +3,9 @@ rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
     
-    // Helper function to check if user is authenticated
-    function isAuthenticated() {
-      return request.auth != null;
+    // Helper function to check if user is admin
+    function isAdmin() {
+      return request.auth != null && request.auth.token.email == 'alleniceedequiros@gmail.com';
     }
 
     // Helper function to validate file size (5MB = 5 * 1024 * 1024 bytes)
@@ -25,7 +25,7 @@ service firebase.storage {
       
       // Only authenticated admins can upload/delete
       // and new uploads must be valid size/type
-      allow write: if isAuthenticated() && (
+      allow write: if isAdmin() && (
         request.resource == null || (isLessThan5MB() && isValidContentType())
       );
     }

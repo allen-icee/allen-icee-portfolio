@@ -3,6 +3,7 @@ import { useCollection } from '../../hooks/useCollection'
 import type { Artwork } from '../../types'
 import AdminTable, { type Column } from '../../components/admin/components/AdminTable'
 import AdminModal from '../../components/admin/modals/AdminModal'
+import OptimizedImage from '../../components/ui/OptimizedImage'
 import { useToast } from '../../components/admin/components/AdminToast'
 import { uploadImage } from '../../services/storage'
 import { Icon } from '@iconify/react'
@@ -28,7 +29,7 @@ export default function AdminArtPage() {
     { 
       key: 'image', 
       label: 'Image',
-      render: (val) => val ? <img src={val} alt="artwork" className="w-12 h-12 object-cover rounded-md" /> : null,
+      render: (val) => val ? <OptimizedImage src={val} alt="artwork" className="w-12 h-12 object-cover rounded-md" /> : null,
       sortable: false
     },
     { key: 'title', label: 'Title' },
@@ -124,7 +125,7 @@ export default function AdminArtPage() {
             <label className="text-xs font-semibold uppercase tracking-wider text-gray-400">Image Upload <span className="text-red-500">*</span></label>
             <div className="flex items-center gap-4">
               {formData.image && (
-                <img src={formData.image} alt="preview" className="w-20 h-20 object-cover rounded-lg border border-white/10" />
+                <OptimizedImage src={formData.image} alt="preview" className="w-20 h-20 object-cover rounded-lg border border-white/10" />
               )}
               <div className="flex flex-col gap-2 flex-1">
                 <input

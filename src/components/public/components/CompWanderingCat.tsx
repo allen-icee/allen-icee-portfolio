@@ -182,6 +182,9 @@ function SingleCat({ config }: { config: CatConfig }) {
   const handleCatClick = () => {
     if (isDragging.current) return
 
+    const audio = new Audio('/sounds/hiss.mp3')
+    audio.play().catch(e => console.error("Audio play failed, file might be missing", e))
+
     const isAttack = Math.random() > 0.5
     state.current = isAttack ? 'pawAttack' : 'hiss'
 

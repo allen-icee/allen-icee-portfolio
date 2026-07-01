@@ -14,6 +14,7 @@ export function Keychain() {
       whileHover={{ scale: 1.1, rotate: [0, -10, 10, -10, 10, 0] }}
       transition={{ duration: 0.5 }}
       onClick={playRoar}
+      onMouseEnter={playRoar}
     >
       <img src="/svg/other/keychain.svg" alt="Dinosaur Keychain" className="w-full h-full object-contain filter drop-shadow-[0_15px_25px_rgba(0,0,0,0.6)] dark:drop-shadow-[0_15px_25px_rgba(0,0,0,0.8)]" />
     </motion.div>

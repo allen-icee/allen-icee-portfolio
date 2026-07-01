@@ -3,6 +3,7 @@ import { useCollection } from '../../hooks/useCollection'
 import type { Project } from '../../types'
 import AdminTable, { type Column } from '../../components/admin/components/AdminTable'
 import AdminModal from '../../components/admin/modals/AdminModal'
+import OptimizedImage from '../../components/ui/OptimizedImage'
 import { useToast } from '../../components/admin/components/AdminToast'
 import { uploadImage } from '../../services/storage'
 import { Icon } from '@iconify/react'
@@ -52,7 +53,7 @@ export default function AdminProjectsPage() {
     { 
       key: 'coverImage', 
       label: 'Cover',
-      render: (val) => val ? <img src={val} alt="cover" className="w-10 h-10 object-cover rounded" /> : null,
+      render: (val) => val ? <OptimizedImage src={val} alt="cover" className="w-10 h-10 object-cover rounded" /> : null,
       sortable: false
     },
     { key: 'title', label: 'Title' },
@@ -201,9 +202,9 @@ export default function AdminProjectsPage() {
           <div className="flex flex-col gap-1.5">
             <label className="text-xs font-semibold uppercase tracking-wider text-gray-400">Cover Image <span className="text-red-500">*</span></label>
             <div className="flex items-center gap-4">
-              {formData.coverImage && (
-                <img src={formData.coverImage} alt="Cover Preview" className="w-16 h-16 object-cover rounded-xl border border-white/10" />
-              )}
+              {formData.coverImage ? (
+                <OptimizedImage src={formData.coverImage} alt="Cover Preview" className="w-16 h-16 object-cover rounded-xl border border-white/10" />
+              ) : null}
               <div className="flex-1 flex items-center gap-4">
                 <input
                   type="file"

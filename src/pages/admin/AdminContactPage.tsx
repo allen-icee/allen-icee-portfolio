@@ -6,7 +6,6 @@ import { Icon } from '@iconify/react'
 
 const defaultFormData: Omit<ContactInfo, 'id' | 'createdAt' | 'updatedAt'> = {
   email: '',
-  phone: '',
   github: '',
   linkedin: '',
   facebook: '',
@@ -25,7 +24,6 @@ export default function AdminContactPage() {
     if (existingDoc) {
       setFormData({
         email: existingDoc.email || '',
-        phone: existingDoc.phone || '',
         github: existingDoc.github || '',
         linkedin: existingDoc.linkedin || '',
         facebook: existingDoc.facebook || '',
@@ -65,13 +63,13 @@ export default function AdminContactPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6 max-w-3xl">
+    <div className="flex flex-col gap-6 w-full">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold tracking-tight text-white">Contact Information</h1>
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-6 bg-gray-900/50 border border-white/10 rounded-2xl p-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6">
           <div className="flex flex-col gap-2">
             <label className="text-xs font-semibold uppercase tracking-wider text-gray-400">Email Address <span className="text-red-500">*</span></label>
             <div className="relative">
@@ -83,19 +81,6 @@ export default function AdminContactPage() {
                 onChange={e => setFormData({ ...formData, email: e.target.value })}
                 className="w-full bg-black/40 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-sm outline-none focus:border-purple-500/50 transition-colors"
                 placeholder="your.email@example.com"
-              />
-            </div>
-          </div>
-          <div className="flex flex-col gap-2">
-            <label className="text-xs font-semibold uppercase tracking-wider text-gray-400">Phone Number</label>
-            <div className="relative">
-              <Icon icon="lucide:phone" className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 w-4 h-4" />
-              <input
-                type="text"
-                value={formData.phone}
-                onChange={e => setFormData({ ...formData, phone: e.target.value })}
-                className="w-full bg-black/40 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-sm outline-none focus:border-purple-500/50 transition-colors"
-                placeholder="+1 234 567 890"
               />
             </div>
           </div>

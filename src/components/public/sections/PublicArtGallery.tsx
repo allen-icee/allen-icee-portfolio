@@ -3,6 +3,7 @@ import { useState, useMemo, memo, Suspense, lazy } from 'react'
 import { motion } from 'framer-motion'
 import { Icon } from '@iconify/react'
 import { Fireflies, FloatingPetal } from '../../ui/Particles'
+import OptimizedImage from '../../ui/OptimizedImage'
 import { useCollection } from '../../../hooks/useCollection'
 import type { MockArtwork as Artwork } from '../../../types'
 
@@ -48,7 +49,7 @@ const ArtCard = memo(function ArtCard({
           <div className="absolute inset-0 border border-black/10 dark:border-black/20 pointer-events-none" />
 
           <div className={`relative shadow-[inset_0_0_4px_rgba(0,0,0,0.2)] ${sizeClass} bg-black/5 dark:bg-black/10 overflow-hidden`}>
-            <img src={artwork.image} alt={artwork.title} className="w-full h-auto object-cover" loading="lazy" />
+            <OptimizedImage src={artwork.image} alt={artwork.title} className="w-full h-auto object-cover" skeletonClassName="bg-black/10 dark:bg-white/10" />
 
             <div className="pointer-events-none absolute inset-0 mix-blend-multiply opacity-[0.03] dark:opacity-[0.05]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\\\'0 0 200 200\\\' xmlns=\\\'http://www.w3.org/2000/svg\\\'%3E%3Cfilter id=\\\'noise\\\'%3E%3CfeTurbulence type=\\\'fractalNoise\\\' baseFrequency=\\\'1.5\\\' numOctaves=\\\'3\\\' stitchTiles=\\\'stitch\\\'/%3E%3C/filter%3E%3Crect width=\\\'100%25\\\' height=\\\'100%25\\\' filter=\\\'url(%23noise)\\\'/%3E%3C/svg%3E")' }} />
           </div>

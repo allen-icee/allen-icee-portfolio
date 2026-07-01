@@ -77,7 +77,6 @@ export interface Certificate {
 export interface ContactInfo {
   id: string
   email: string
-  phone: string
   github: string
   linkedin: string
   facebook: string

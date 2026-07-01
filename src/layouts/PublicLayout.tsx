@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
+import { Helmet } from 'react-helmet-async'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useSmoothScroll } from '../hooks/useSmoothScroll'
 import { Navbar } from '../components/navigation/Navbar'
@@ -28,7 +29,14 @@ export default function PublicLayout() {
   }, [])
 
   return (
-    <div className="paper-texture min-h-screen overflow-x-hidden bg-warm-paper dark:bg-surface text-charcoal dark:text-white transition-colors duration-700">
+    <div className="paper-texture relative min-h-screen overflow-x-hidden bg-warm-paper dark:bg-surface text-charcoal dark:text-white transition-colors duration-700 font-sans">
+      <Helmet>
+        <title>Allen Icee Dequiros - Portfolio</title>
+        <meta name="description" content="Portfolio of Allen Icee Dequiros, showcasing projects, artwork, and experience." />
+        <meta property="og:title" content="Allen Icee Dequiros - Portfolio" />
+        <meta property="og:description" content="Portfolio of Allen Icee Dequiros, showcasing projects, artwork, and experience." />
+        <meta property="og:type" content="website" />
+      </Helmet>
       <CompEnvironment />
       <CompWanderingCat />
       <Navbar />

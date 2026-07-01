@@ -39,7 +39,7 @@ const TableRowInner = function <T>({
   return (
     <tr className="border-b border-white/5 transition-colors hover:bg-white/5">
       {columns.map((col) => (
-        <td key={String(col.key)} className="px-4 py-3 text-white/80">
+        <td key={String(col.key)} className={`px-4 py-3 text-white/80 ${col.key === 'order' ? 'text-center' : ''}`}>
           {col.render
             ? col.render(row[col.key as keyof T], row)
             : String(row[col.key as keyof T] ?? '')}
@@ -199,10 +199,10 @@ export default function AdminTable<T>({
               {columns.map((col) => (
                 <th 
                   key={String(col.key)} 
-                  className={`px-4 py-3 font-medium text-white/60 ${col.sortable !== false ? 'cursor-pointer select-none hover:text-white transition-colors' : ''}`}
+                  className={`px-4 py-3 font-medium text-white/60 text-center ${col.sortable !== false ? 'cursor-pointer select-none hover:text-white transition-colors' : ''}`}
                   onClick={() => col.sortable !== false && handleSort(col.key)}
                 >
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center justify-center gap-2">
                     {col.label}
                     {col.sortable !== false && sortConfig?.key === col.key && (
                       <Icon icon={sortConfig.direction === 'asc' ? 'lucide:chevron-up' : 'lucide:chevron-down'} className="size-3" />
@@ -210,7 +210,7 @@ export default function AdminTable<T>({
                   </div>
                 </th>
               ))}
-              <th className="px-4 py-3 text-right text-white/60 w-24">Actions</th>
+              <th className="px-4 py-3 text-center text-white/60 w-24">Actions</th>
             </tr>
           </thead>
           <tbody>

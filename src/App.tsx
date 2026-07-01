@@ -32,7 +32,7 @@ const queryClient = new QueryClient({
 // Simple generic loader that doesn't cause drastic layout shifts
 function PageLoader() {
   return (
-    <div className="w-full h-screen flex flex-col items-center justify-center bg-[#fdfbf7] dark:bg-[#120c08] text-charcoal/40 dark:text-white/40">
+    <div className="w-full h-screen flex flex-col items-center justify-center bg-warm-paper dark:bg-surface text-charcoal/40 dark:text-white/40">
       <Icon icon="lucide:loader-2" className="size-6 animate-spin mb-4" />
       <p className="font-sans text-xs tracking-widest uppercase">Loading...</p>
     </div>
