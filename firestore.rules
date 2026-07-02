@@ -43,6 +43,11 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    match /stats/{docId} {
+      allow read: if isAdmin();
+      allow write: if true;
+    }
+
     // Deny everything else by default
     match /{document=**} {
       allow read, write: if false;
