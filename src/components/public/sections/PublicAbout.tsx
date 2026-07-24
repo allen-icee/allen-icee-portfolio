@@ -41,13 +41,13 @@ export default function PublicAbout() {
           <Glasses onClick={() => setShowGlasses(true)} />
         </div>
 
-        <div 
+        <div
           className="lg:hidden cursor-pointer bg-[#F5F5DC]/80 dark:bg-[#3E2723]/80 backdrop-blur-sm p-3 rounded-full border border-black/10 dark:border-white/10 shadow-lg hover:scale-110 transition-transform mt-8 mr-8"
           onClick={() => setShowGlasses(true)}
           title="View Glasses"
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#6B4C9A] dark:text-[#E6E6FA]">
-            <circle cx="6" cy="15" r="4"/><circle cx="18" cy="15" r="4"/><path d="M14 15a2 2 0 0 0-4 0"/><path d="M2.5 13 6 7c.7-1.5 2.5-2 4-1.5L12 7l2-1.5c1.5-.5 3.3 0 4 1.5l3.5 6"/>
+            <circle cx="6" cy="15" r="4" /><circle cx="18" cy="15" r="4" /><path d="M14 15a2 2 0 0 0-4 0" /><path d="M2.5 13 6 7c.7-1.5 2.5-2 4-1.5L12 7l2-1.5c1.5-.5 3.3 0 4 1.5l3.5 6" />
           </svg>
         </div>
       </div>
@@ -131,15 +131,15 @@ export default function PublicAbout() {
                     <div className="hidden md:block">
                       <p>Well look at you. You actually clicked the About section. Good job taking the initiative to get to know me!</p>
                       <p>So my name is Allen Icee Dequiros. Most people out in the real world call me Allen, but my family calls me Ice. Since you made it this far into my little space, you can just call me Ice too.</p>
-                      <p>I am technically a web developer, but let us be real, I mostly just vibe code most of the time lol. I do digital arts as well. I am not trying to master it or anything though. I just do it for fun hehe. When I am not doing all of that, you can find me wandering through my thoughts, surviving on ice cream, living in the color gray, and consuming amount of books, manga, manhwas, anime, and movies.</p>
+                      <p>I am technically a web developer, but let us be real, I do just vibe code most of the time lol. I do digital arts as well. I am not trying to master it or anything though. I just do it for fun hehe. When I am not doing all of that, you can find me wandering through my thoughts, surviving on ice cream, living in the color gray, and consuming unhealthy amount of books, manga, manhwas, anime, and movies.</p>
                     </div>
 
                     <div className="md:hidden relative border-y border-charcoal/10 dark:border-white/10 shadow-[inset_0_-10px_10px_-10px_rgba(0,0,0,0.05)] mb-6">
                       <div className="max-h-[220px] overflow-y-auto pr-3 py-3 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                         <p>Well look at you. You actually clicked the About section. Good job taking the initiative to get to know me!</p>
                         <p>So my name is Allen Icee Dequiros. Most people out in the real world call me Allen, but my family calls me Ice. Since you made it this far into my little space, you can just call me Ice too.</p>
-                        <p>I am technically a web developer, but let us be real, I mostly just vibe code most of the time lol. I do digital arts as well. I am not trying to master it or anything though. I just do it for fun hehe. When I am not doing all of that, you can find me wandering through my thoughts, surviving on ice cream, living in the color gray, and consuming amount of books, manga, manhwas, anime, and movies.</p>
-                        <p>I am a very curious fellow who is always interested in learning all kinds of new things since what's there to lose. If you ever feel like no one is there for you, I won't be there too TT_TT but you do need a counselor for your deep life problems? I got you. Do you need a professional judger to roast your bad choices? I definitely got you lol.</p>
+                        <p>I am technically a web developer, but let us be real, I do just vibe code most of the time lol. I do digital arts as well. I am not trying to master it or anything though. I just do it for fun hehe. When I am not doing all of that, you can find me wandering through my thoughts, surviving on ice cream, living in the color gray, and consuming unhealthy amount of books, manga, manhwas, anime, and movies.</p>
+                        <p>I am a very curious fellow who is always interested in learning all kinds of new things since what's there to lose. If you ever feel like no one is there for you, I won't be there too TT_TT but if you do need a counselor for your deep life problems? I got you. Do you need a professional judger to roast your bad choices? I definitely got you lol.</p>
                         <p>Adulting is really hard, and life is definitely scary, but try to move forward with me even on the days it's terrifying, ok. At the end of the day, the ones who make it all worth it are the ones we love the most.</p>
                         <p>Anyway, thanks for taking the time to know me. Oh, and I am highly open to taking donations lol since I'm broke (≧▽≦).</p>
                       </div>
@@ -161,7 +161,7 @@ export default function PublicAbout() {
                   </div>
 
                   <div className="prose max-w-none font-body text-[13px] leading-6 text-charcoal/80 dark:text-[#EAE0D5]/80 md:text-sm md:leading-7 [&_p]:mb-6 [&_p:last-child]:mb-0 [&_p]:break-words pt-4 lg:pt-8">
-                    <p>I am a very curious fellow who is always interested in learning all kinds of new things since what's there to lose. If you ever feel like no one is there for you, I won't be there too TT_TT but you do need a counselor for your deep life problems? I got you. Do you need a professional judger to roast your bad choices? I definitely got you lol.</p>
+                    <p>I am a very curious fellow who is always interested in learning all kinds of new things since what's there to lose. If you ever feel like no one is there for you, I won't be there too TT_TT but if you do need a counselor for your deep life problems? I got you. Do you need a professional judger to roast your bad choices? I definitely got you lol.</p>
                     <p>Adulting is really hard, and life is definitely scary, but try to move forward with me even on the days it's terrifying, ok. At the end of the day, the ones who make it all worth it are the ones we love the most.</p>
                     <p>Anyway, thanks for taking the time to know me. Oh, and I am highly open to taking donations lol since I'm broke (≧▽≦).</p>
                   </div>
